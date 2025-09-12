@@ -98,7 +98,8 @@ export function ResourcesTable() {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="overflow-x-auto">
+        {/* Desktop Table View */}
+        <div className="hidden lg:block overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b">
@@ -201,6 +202,104 @@ export function ResourcesTable() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile Card View */}
+        <div className="lg:hidden space-y-4">
+          {resources.map((resource, index) => (
+            <motion.div
+              key={resource.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className="bg-muted/30 rounded-lg p-4 space-y-3"
+            >
+              {/* Header */}
+              <div className="flex items-start justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 rounded-lg bg-background">
+                    {getResourceIcon(resource.type)}
+                  </div>
+                  <div>
+                    <div className="font-medium text-sm">{resource.name}</div>
+                    <div className="text-xs text-muted-foreground">{resource.externalId}</div>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-8 w-8 p-0"
+                    onClick={() => handleResourceAction(resource.id, 'start')}
+                    disabled={isExecutingAction}
+                  >
+                    <Play className="w-3 h-3" />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-8 w-8 p-0"
+                    onClick={() => handleResourceAction(resource.id, 'stop')}
+                    disabled={isExecutingAction}
+                  >
+                    <Square className="w-3 h-3" />
+                  </Button>
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                    <MoreHorizontal className="w-3 h-3" />
+                  </Button>
+                </div>
+              </div>
+
+              {/* Details Grid */}
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                  <div className="text-xs text-muted-foreground mb-1">Provider</div>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getProviderColor(resource.provider.toLowerCase())}`}>
+                    {resource.provider}
+                  </span>
+                </div>
+                <div>
+                  <div className="text-xs text-muted-foreground mb-1">Status</div>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(resource.status)}`}>
+                    {resource.status.toUpperCase()}
+                  </span>
+                </div>
+                <div>
+                  <div className="text-xs text-muted-foreground mb-1">Cost/Month</div>
+                  <div className="font-mono font-medium">${resource.cost.toFixed(2)}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-muted-foreground mb-1">Utilization</div>
+                  <span className={`font-medium ${getUtilizationColor(resource.utilization?.cpu || 0)}`}>
+                    {resource.utilization?.cpu?.toFixed(0) || 0}%
+                  </span>
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t">
+                <div>
+                  <span className="font-medium">Region:</span> {resource.region}
+                </div>
+                <div>
+                  <span className="font-medium">Sync:</span> {formatTimeAgo(new Date(resource.lastSyncAt))}
+                </div>
+              </div>
+
+              {/* Digital Twin Status */}
+              <div className="flex items-center justify-between">
+                <div className="text-xs text-muted-foreground">Digital Twin:</div>
+                {Math.random() > 0.5 ? (
+                  <div className="flex items-center space-x-1">
+                    <Eye className="w-4 h-4 text-digital-twin" />
+                    <span className="text-xs text-digital-twin font-medium">Active</span>
+                  </div>
+                ) : (
+                  <span className="text-xs text-muted-foreground">None</span>
+                )}
+              </div>
+            </motion.div>
+          ))}
         </div>
 
         {/* Summary Stats */}

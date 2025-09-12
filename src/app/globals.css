@@ -199,15 +199,97 @@
   
   /* Layout Utilities */
   .container-fluid {
-    @apply w-full max-w-none px-4 sm:px-6 lg:px-8;
+    @apply w-full max-w-none px-3 sm:px-4 md:px-6 lg:px-8;
   }
   
   .grid-auto-fit {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   }
   
   .grid-auto-fill {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+  
+  /* Mobile-first responsive utilities */
+  .grid-responsive-1 {
+    @apply grid grid-cols-1;
+  }
+  
+  .grid-responsive-2 {
+    @apply grid grid-cols-1 sm:grid-cols-2;
+  }
+  
+  .grid-responsive-3 {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3;
+  }
+  
+  .grid-responsive-4 {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+  }
+  
+  .grid-responsive-6 {
+    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6;
+  }
+  
+  /* Mobile navigation */
+  .mobile-nav {
+    @apply fixed inset-x-0 top-0 z-50 bg-background/95 backdrop-blur-sm border-b;
+  }
+  
+  .mobile-nav-item {
+    @apply flex items-center space-x-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors;
+  }
+  
+  .mobile-nav-item:hover {
+    @apply bg-accent text-accent-foreground;
+  }
+  
+  /* Touch-friendly interactions */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+  }
+  
+  .mobile-card {
+    @apply bg-card rounded-lg border p-4 transition-all duration-200;
+  }
+  
+  .mobile-card:active {
+    @apply scale-[0.98] shadow-sm;
+  }
+  
+  /* Responsive text */
+  .text-responsive {
+    @apply text-sm sm:text-base;
+  }
+  
+  .text-responsive-lg {
+    @apply text-base sm:text-lg;
+  }
+  
+  .text-responsive-xl {
+    @apply text-lg sm:text-xl;
+  }
+  
+  /* Mobile-first spacing */
+  .space-mobile {
+    @apply space-y-2 sm:space-y-3 lg:space-y-4;
+  }
+  
+  .gap-mobile {
+    @apply gap-2 sm:gap-3 lg:gap-4;
+  }
+  
+  /* Responsive padding */
+  .p-mobile {
+    @apply p-3 sm:p-4 lg:p-6;
+  }
+  
+  .px-mobile {
+    @apply px-3 sm:px-4 lg:px-6;
+  }
+  
+  .py-mobile {
+    @apply py-3 sm:py-4 lg:py-6;
   }
   
   /* Animation Utilities */

@@ -52,7 +52,7 @@ export function MetricCard({
         typeStyles[type],
         className
       )}>
-        <CardContent className="p-4">
+        <CardContent className="p-3 sm:p-4">
           {/* Background Pattern */}
           <div className="absolute top-0 right-0 w-16 h-16 opacity-5">
             <div className="w-full h-full transform rotate-12 scale-150">
@@ -86,10 +86,10 @@ export function MetricCard({
             </div>
 
             <div className="space-y-1">
-              <p className="text-2xl font-bold tracking-tight">{value}</p>
-              <p className="text-sm text-muted-foreground">{title}</p>
+              <p className="text-xl sm:text-2xl font-bold tracking-tight">{value}</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">{title}</p>
               {description && (
-                <p className="text-xs text-muted-foreground/70 mt-1">{description}</p>
+                <p className="text-xs text-muted-foreground/70 mt-1 hidden sm:block">{description}</p>
               )}
             </div>
           </div>

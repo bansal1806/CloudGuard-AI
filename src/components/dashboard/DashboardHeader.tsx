@@ -16,7 +16,8 @@ import {
   ChevronDown,
   LogOut,
   UserCircle,
-  Palette
+  Palette,
+  DollarSign
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -26,6 +27,7 @@ export function DashboardHeader() {
   const [showNotifications, setShowNotifications] = useState(false)
   const [showUserMenu, setShowUserMenu] = useState(false)
   const [showSearch, setShowSearch] = useState(false)
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   
   const [notifications] = useState([
@@ -93,8 +95,8 @@ export function DashboardHeader() {
             </motion.div>
           </div>
 
-          {/* Status Indicators */}
-          <div className="hidden md:flex items-center space-x-6">
+          {/* Status Indicators - Hidden on mobile, shown on larger screens */}
+          <div className="hidden lg:flex items-center space-x-4 xl:space-x-6">
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -139,42 +141,200 @@ export function DashboardHeader() {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center space-x-2">
-            {/* Search */}
-            <Button variant="ghost" size="icon" className="hidden md:flex">
+          <div className="flex items-center space-x-1 sm:space-x-2">
+            {/* Search - Hidden on mobile */}
+            <Button variant="ghost" size="icon" className="hidden sm:flex" onClick={() => setShowSearch(!showSearch)}>
               <Search className="w-4 h-4" />
             </Button>
 
             {/* Notifications */}
             <div className="relative">
-              <Button variant="ghost" size="icon">
+              <Button 
+                variant="ghost" 
+                size="icon"
+                onClick={() => setShowNotifications(!showNotifications)}
+              >
                 <Bell className="w-4 h-4" />
                 {notifications.length > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
                     {notifications.length}
                   </span>
                 )}
               </Button>
+              
+              {/* Notifications Dropdown */}
+              <AnimatePresence>
+                {showNotifications && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                    className="absolute right-0 top-full mt-2 w-72 sm:w-80 bg-popover border rounded-lg shadow-lg z-50"
+                  >
+                    <div className="p-4">
+                      <h3 className="font-semibold mb-3">Notifications</h3>
+                      <div className="space-y-2 max-h-64 overflow-y-auto">
+                        {notifications.map((notification) => (
+                          <div
+                            key={notification.id}
+                            className="p-3 bg-muted/50 rounded-lg cursor-pointer hover:bg-muted/70 transition-colors"
+                            onClick={() => handleNotificationClick(notification)}
+                          >
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <p className="text-sm font-medium">{notification.title}</p>
+                                <p className="text-xs text-muted-foreground mt-1">{notification.description}</p>
+                              </div>
+                              <span className="text-xs text-muted-foreground ml-2">{notification.time}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
-            {/* Settings */}
-            <Button variant="ghost" size="icon">
+            {/* Settings - Hidden on mobile */}
+            <Button variant="ghost" size="icon" className="hidden sm:flex" onClick={handleSettingsClick}>
               <Settings className="w-4 h-4" />
             </Button>
 
             {/* User Menu */}
-            <Button variant="ghost" size="icon">
-              <User className="w-4 h-4" />
-            </Button>
+            <div className="relative">
+              <Button 
+                variant="ghost" 
+                size="icon"
+                onClick={() => setShowUserMenu(!showUserMenu)}
+                className="hidden sm:flex"
+              >
+                <User className="w-4 h-4" />
+              </Button>
+              
+              {/* User Menu Dropdown */}
+              <AnimatePresence>
+                {showUserMenu && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                    className="absolute right-0 top-full mt-2 w-48 bg-popover border rounded-lg shadow-lg z-50"
+                  >
+                    <div className="p-2">
+                      <button
+                        className="mobile-nav-item w-full text-left"
+                        onClick={() => handleUserMenuClick('profile')}
+                      >
+                        <UserCircle className="w-4 h-4" />
+                        Profile
+                      </button>
+                      <button
+                        className="mobile-nav-item w-full text-left"
+                        onClick={() => handleUserMenuClick('settings')}
+                      >
+                        <Settings className="w-4 h-4" />
+                        Settings
+                      </button>
+                      <button
+                        className="mobile-nav-item w-full text-left"
+                        onClick={() => handleUserMenuClick('logout')}
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Logout
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
-            {/* Mobile Menu */}
-            <Button variant="ghost" size="icon" className="md:hidden">
-              <Menu className="w-4 h-4" />
+            {/* Mobile Menu Button */}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="sm:hidden"
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
+            >
+              {showMobileMenu ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </Button>
           </div>
         </div>
 
-        {/* AI Status Bar */}
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {showMobileMenu && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="sm:hidden border-t bg-background/95 backdrop-blur-sm"
+            >
+              <div className="container-fluid py-4">
+                <div className="space-y-4">
+                  {/* Mobile Search */}
+                  <div className="flex items-center space-x-2">
+                    <Search className="w-4 h-4 text-muted-foreground" />
+                    <input
+                      type="text"
+                      placeholder="Search..."
+                      className="flex-1 bg-transparent border-none outline-none text-sm"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </div>
+                  
+                  {/* Mobile Status Indicators */}
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      <span className="text-muted-foreground">AI Engine</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Activity className="w-4 h-4 text-blue-500" />
+                      <span className="text-muted-foreground">12 Twins Active</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Shield className="w-4 h-4 text-green-500" />
+                      <span className="text-muted-foreground">Secure</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Zap className="w-4 h-4 text-yellow-500" />
+                      <span className="text-muted-foreground">Auto-Optimizing</span>
+                    </div>
+                  </div>
+                  
+                  {/* Mobile Actions */}
+                  <div className="space-y-2 pt-2 border-t">
+                    <button
+                      className="mobile-nav-item w-full text-left"
+                      onClick={() => handleUserMenuClick('profile')}
+                    >
+                      <UserCircle className="w-4 h-4" />
+                      Profile
+                    </button>
+                    <button
+                      className="mobile-nav-item w-full text-left"
+                      onClick={handleSettingsClick}
+                    >
+                      <Settings className="w-4 h-4" />
+                      Settings
+                    </button>
+                    <button
+                      className="mobile-nav-item w-full text-left"
+                      onClick={() => handleUserMenuClick('logout')}
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* AI Status Bar - Responsive */}
         <motion.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
@@ -182,8 +342,9 @@ export function DashboardHeader() {
           className="pb-3"
         >
           <Card className="p-3">
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center space-x-4">
+            {/* Desktop Layout */}
+            <div className="hidden md:flex items-center justify-between text-sm">
+              <div className="flex items-center space-x-4 lg:space-x-6">
                 <div className="flex items-center space-x-2">
                   <Brain className="w-4 h-4 text-digital-twin" />
                   <span className="font-medium">AI Predictions:</span>
@@ -203,6 +364,40 @@ export function DashboardHeader() {
               <div className="flex items-center space-x-2">
                 <span className="text-muted-foreground">Cost Saved Today:</span>
                 <span className="font-bold text-green-500">$1,247</span>
+              </div>
+            </div>
+            
+            {/* Mobile Layout */}
+            <div className="md:hidden">
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div className="flex items-center space-x-2">
+                  <Brain className="w-4 h-4 text-digital-twin" />
+                  <div>
+                    <div className="font-medium text-xs">AI Predictions</div>
+                    <div className="text-green-500 font-bold">94.2%</div>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Zap className="w-4 h-4 text-yellow-500" />
+                  <div>
+                    <div className="font-medium text-xs">Auto-Actions</div>
+                    <div className="text-blue-500 font-bold">23</div>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Shield className="w-4 h-4 text-green-500" />
+                  <div>
+                    <div className="font-medium text-xs">Threats Blocked</div>
+                    <div className="text-green-500 font-bold">7</div>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <DollarSign className="w-4 h-4 text-green-500" />
+                  <div>
+                    <div className="font-medium text-xs">Cost Saved</div>
+                    <div className="text-green-500 font-bold">$1,247</div>
+                  </div>
+                </div>
               </div>
             </div>
           </Card>

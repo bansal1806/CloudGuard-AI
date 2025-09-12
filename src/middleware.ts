@@ -79,6 +79,8 @@ export function middleware(request: NextRequest) {
       // Demo endpoints for development
       '/api/metrics',
       '/api/cloud/resources',
+      '/api/cloud/providers',
+      '/api/cloud/migration',
       '/api/cloud/connect',
       '/api/digital-twins',
       '/api/monitoring',

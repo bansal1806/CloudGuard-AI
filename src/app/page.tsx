@@ -116,13 +116,13 @@ export default function DashboardPage() {
       <DashboardHeader />
 
       {/* Main Dashboard Content */}
-      <main className="container-fluid py-6 space-y-6">
+      <main className="container-fluid py-4 sm:py-6 space-y-4 sm:space-y-6">
         {/* Hero Metrics */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4"
         >
           <MetricCard
             title="Total Resources"
@@ -187,7 +187,7 @@ export default function DashboardPage() {
         </motion.div>
 
         {/* Real-time Metrics and Alerts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-6">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -205,7 +205,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Security and Cost Optimization */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-6">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}

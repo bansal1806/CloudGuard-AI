@@ -45,16 +45,21 @@ export function useRealTimeMetrics(resourceId: string = 'demo-resource-1') {
     refetchInterval: 30000, // 30 seconds for historical data
   })
 
-  // Initialize WebSocket connection and mock data
+  // Initialize WebSocket connection and real-time data sources
   useEffect(() => {
     if (initialized.current) return
     initialized.current = true
 
-    // Connect WebSocket (will use mock data if real server not available)
+    // Connect WebSocket (will use real data sources)
     wsClient.connect()
     
-    // Start mock data generator for demo
-    mockDataGenerator.start()
+    // Initialize real-time data collection
+    initializeRealTimeDataSources()
+    
+    // Fallback to mock data if needed
+    if (process.env.NODE_ENV === 'development') {
+      mockDataGenerator.start()
+    }
 
     const handleConnection = (data: any) => {
       setIsConnected(data.status === 'connected')
@@ -93,9 +98,30 @@ export function useRealTimeMetrics(resourceId: string = 'demo-resource-1') {
     return () => {
       wsClient.off('connection', handleConnection)
       wsClient.off('metrics', handleMetrics)
-      mockDataGenerator.stop()
+      if (process.env.NODE_ENV === 'development') {
+        mockDataGenerator.stop()
+      }
+      // Real-time data sources are managed globally, no need to stop here
     }
   }, [resourceId])
+
+  // Initialize real-time data sources
+  const initializeRealTimeDataSources = async () => {
+    try {
+      // Start the real-time data collection
+      const response = await fetch('/api/data-sources', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'start', interval: 3000 })
+      })
+      
+      if (response.ok) {
+        console.log('✅ Real-time data sources initialized')
+      }
+    } catch (error) {
+      console.error('Failed to initialize real-time data sources:', error)
+    }
+  }
 
   // Initialize with historical data
   useEffect(() => {

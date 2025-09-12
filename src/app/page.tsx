@@ -8,27 +8,19 @@ import {
   Shield, 
   TrendingUp, 
   Activity,
-  Server,
   Database,
   Network,
   DollarSign,
   AlertTriangle,
   CheckCircle,
   Brain,
-  Eye,
   Cpu
 } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
 import { MetricCard } from '@/components/dashboard/MetricCard'
-import { CloudProviderOverview } from '@/components/dashboard/CloudProviderOverview'
-import { ResourcesTable } from '@/components/dashboard/ResourcesTable'
-import { DigitalTwinVisualization } from '@/components/dashboard/DigitalTwinVisualization'
-import { RealTimeMetrics } from '@/components/dashboard/RealTimeMetrics'
-import { PredictiveAlerts } from '@/components/dashboard/PredictiveAlerts'
-import { CostOptimization } from '@/components/dashboard/CostOptimization'
-import { SecurityGuardian } from '@/components/dashboard/SecurityGuardian'
+import { DashboardTabs } from '@/components/dashboard/DashboardTabs'
 
 export default function DashboardPage() {
   const [dashboardMetrics, setDashboardMetrics] = useState({
@@ -66,29 +58,17 @@ export default function DashboardPage() {
 
   const handleMetricClick = (metricType: string, value: string) => {
     switch(metricType) {
-      case 'resources':
-        toast.info(`Viewing details for ${value} total resources`)
-        // Navigate to resources page
-        break
       case 'alerts':
         toast.warning(`Checking ${value} active alerts`)
-        // Navigate to alerts page
         break
       case 'savings':
         toast.success(`Cost savings details: ${value}`)
-        // Navigate to cost optimization page
         break
       case 'uptime':
         toast.info(`System uptime: ${value}`)
-        // Navigate to performance metrics
         break
       case 'ai':
         toast.info(`AI accuracy: ${value}`)
-        // Navigate to AI insights
-        break
-      case 'twins':
-        toast.info(`Managing ${value} digital twins`)
-        // Navigate to digital twins page
         break
     }
   }
@@ -103,7 +83,7 @@ export default function DashboardPage() {
           </div>
           <div className="space-y-2">
             <h2 className="text-2xl font-bold ai-gradient-text">Initializing CloudGuard AI</h2>
-            <p className="text-muted-foreground">Connecting to Digital Twin ecosystem...</p>
+            <p className="text-muted-foreground">Connecting to multi-cloud infrastructure...</p>
           </div>
         </div>
       </div>
@@ -122,15 +102,8 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4"
         >
-          <MetricCard
-            title="Total Resources"
-            value={dashboardMetrics.totalResources.toString()}
-            icon={<Server className="w-5 h-5" />}
-            trend="+12%"
-            type="info"
-          />
           <MetricCard
             title="Active Alerts"
             value={dashboardMetrics.activeAlerts.toString()}
@@ -159,76 +132,15 @@ export default function DashboardPage() {
             trend="+2.3%"
             type="info"
           />
-          <MetricCard
-            title="Digital Twins"
-            value={dashboardMetrics.digitalTwins.toString()}
-            icon={<Eye className="w-5 h-5" />}
-            trend="+3"
-            type="info"
-          />
         </motion.div>
 
-        {/* Digital Twin Visualization */}
+        {/* Complete Dashboard with All Sections */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
         >
-          <DigitalTwinVisualization />
-        </motion.div>
-
-        {/* Cloud Provider Overview */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <CloudProviderOverview />
-        </motion.div>
-
-        {/* Real-time Metrics and Alerts */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-6">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <RealTimeMetrics />
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <PredictiveAlerts />
-          </motion.div>
-        </div>
-
-        {/* Security and Cost Optimization */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-6">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <SecurityGuardian />
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <CostOptimization />
-          </motion.div>
-        </div>
-
-        {/* Resources Table */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-        >
-          <ResourcesTable />
+          <DashboardTabs />
         </motion.div>
       </main>
     </div>

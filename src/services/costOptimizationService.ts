@@ -128,7 +128,7 @@ export class CostOptimizationService {
 
   private async analyzeResourceCost(resource: CloudResource): Promise<CostOptimizationRecommendation[]> {
     const recommendations: CostOptimizationRecommendation[] = []
-    const utilization = resource.utilization || {}
+    const utilization = resource.configuration?.utilization || { cpu: 50, memory: 60, network: 30 }
     const cost = resource.cost || 0
 
     // 1. Right-sizing Analysis
@@ -411,7 +411,7 @@ export class CostOptimizationService {
         monthlySavings: savings * 30,
         annualSavings: savings * 365,
         performanceImpact: 'NONE',
-        availabilityImpact: 'PLANNED',
+        availabilityImpact: 'MINIMAL',
         operationalComplexity: 'LOW'
       },
       implementation: {
@@ -533,7 +533,7 @@ export class CostOptimizationService {
     let totalWaste = 0
 
     for (const resource of resources) {
-      const utilization = resource.utilization || {}
+      const utilization = resource.configuration?.utilization || { cpu: 50, memory: 60, network: 30 }
       
       // Detect unused resources (0% utilization)
       if (utilization.cpu === 0 && utilization.memory === 0) {

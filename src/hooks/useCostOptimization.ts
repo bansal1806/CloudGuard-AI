@@ -33,9 +33,9 @@ export function useCostOptimization() {
   const [isAutoOptimizing, setIsAutoOptimizing] = useState(false)
 
   // Fetch cost optimizations
-  const { data: costData, isLoading, error } = useQuery({
-    queryKey: ['cost-optimizations'],
-    queryFn: async () => {
+  const { data: costData, isLoading, error } = useQuery(
+    ['cost-optimizations'],
+    async () => {
       console.log('Fetching cost optimizations...')
       
       // Create a timeout promise
@@ -57,15 +57,17 @@ export function useCostOptimization() {
       // Race between fetch and timeout
       return Promise.race([fetchPromise, timeoutPromise])
     },
-    refetchInterval: 30000, // Refresh every 30 seconds
-    retry: 1, // Only retry once
-    staleTime: 5 * 60 * 1000, // Consider data stale after 5 minutes
-    gcTime: 10 * 60 * 1000, // Garbage collect after 10 minutes
-  })
+    {
+      refetchInterval: 30000, // Refresh every 30 seconds
+      retry: 1, // Only retry once
+      staleTime: 5 * 60 * 1000, // Consider data stale after 5 minutes
+      cacheTime: 10 * 60 * 1000, // Cache for 10 minutes (gcTime in v5)
+    }
+  )
 
   // Apply optimization mutation
-  const applyOptimization = useMutation({
-    mutationFn: async ({ optimizationId, action }: { optimizationId: string, action: string }) => {
+  const applyOptimization = useMutation(
+    async ({ optimizationId, action }: { optimizationId: string, action: string }) => {
       const response = await fetch('/api/cost/optimization', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -76,21 +78,23 @@ export function useCostOptimization() {
       }
       return response.json()
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['cost-optimizations'] })
-      toast({
-        title: 'Optimization Applied',
-        description: data.details || 'Cost optimization has been applied successfully.',
-      })
-    },
-    onError: (error) => {
-      toast({
-        title: 'Optimization Failed',
-        description: 'Failed to apply cost optimization. Please try again.',
-        variant: 'destructive',
-      })
-    },
-  })
+    {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries(['cost-optimizations'])
+        toast({
+          title: 'Optimization Applied',
+          description: data.details || 'Cost optimization has been applied successfully.',
+        })
+      },
+      onError: (error) => {
+        toast({
+          title: 'Optimization Failed',
+          description: 'Failed to apply cost optimization. Please try again.',
+          variant: 'destructive',
+        })
+      },
+    }
+  )
 
   // Auto-optimization function
   const runAutoOptimization = async () => {

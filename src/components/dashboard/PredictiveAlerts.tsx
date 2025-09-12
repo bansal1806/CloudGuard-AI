@@ -124,7 +124,7 @@ export function PredictiveAlerts() {
           </div>
           <div className="flex items-center space-x-2">
             <div className="text-sm text-muted-foreground">
-              {summary.byStatus.active} active • {avgConfidence.toFixed(1)}% avg confidence
+              {summary?.byStatus?.active || 0} active • {avgConfidence?.toFixed(1) || '0.0'}% avg confidence
             </div>
             <Button
               variant="ghost"
@@ -524,25 +524,25 @@ export function PredictiveAlerts() {
           <div className="grid grid-cols-4 gap-4 text-center text-sm mb-4">
             <div>
               <div className="text-lg font-bold text-red-500">
-                {summary.bySeverity.critical}
+                {summary?.bySeverity?.critical || 0}
               </div>
               <div className="text-xs text-muted-foreground">Critical</div>
             </div>
             <div>
               <div className="text-lg font-bold text-orange-500">
-                {summary.bySeverity.high}
+                {summary?.bySeverity?.high || 0}
               </div>
               <div className="text-xs text-muted-foreground">High</div>
             </div>
             <div>
               <div className="text-lg font-bold text-yellow-500">
-                {summary.bySeverity.medium}
+                {summary?.bySeverity?.medium || 0}
               </div>
               <div className="text-xs text-muted-foreground">Medium</div>
             </div>
             <div>
               <div className="text-lg font-bold text-green-500">
-                {summary.byStatus.resolved}
+                {summary?.byStatus?.resolved || 0}
               </div>
               <div className="text-xs text-muted-foreground">Resolved</div>
             </div>
@@ -552,11 +552,11 @@ export function PredictiveAlerts() {
           <div className="flex justify-center space-x-2">
             <Button variant="outline" size="sm" onClick={() => updateFilters({ status: 'active' })}>
               <AlertTriangle className="w-4 h-4 mr-1" />
-              View Active ({summary.byStatus.active})
+              View Active ({summary?.byStatus?.active || 0})
             </Button>
             <Button variant="outline" size="sm" onClick={() => updateFilters({ severity: 'critical' })}>
               <AlertOctagon className="w-4 h-4 mr-1" />
-              Critical Only ({summary.bySeverity.critical})
+              Critical Only ({summary?.bySeverity?.critical || 0})
             </Button>
           </div>
         </div>

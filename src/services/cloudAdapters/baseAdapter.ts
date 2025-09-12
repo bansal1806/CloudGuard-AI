@@ -25,6 +25,8 @@ export interface ICloudAdapter {
   getMetrics(resourceId: string, timeRange: any): Promise<any[]>;
   applyPolicy(resourceId: string, policy: any): Promise<boolean>;
   getCostData(resourceId: string, startDate: Date, endDate: Date): Promise<number>;
+  scaleResource(resourceId: string, config: any): Promise<boolean>;
+  startResource(resourceId: string): Promise<boolean>;
 }
 
 // Export types for other modules

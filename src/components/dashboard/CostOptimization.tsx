@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { DollarSign, TrendingDown, TrendingUp, Zap, Target, PieChart, Loader2 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -104,13 +104,15 @@ export function CostOptimization() {
   
   const isLoading = hookResult.isLoading && hookResult.optimizations.length === 0 && !hookResult.error && !showFallback
   
-  const summary = hookResult.summary.totalRecommendations > 0 ? hookResult.summary : {
-    totalRecommendations: 4,
-    totalPotentialSavings: 1330.68,
-    availableOptimizations: 2,
-    appliedOptimizations: 1,
-    averageConfidence: 91.8
-  }
+  const summary = useMemo(() => {
+    return hookResult.summary.totalRecommendations > 0 ? hookResult.summary : {
+      totalRecommendations: 4,
+      totalPotentialSavings: 1330.68,
+      availableOptimizations: 2,
+      appliedOptimizations: 1,
+      averageConfidence: 91.8
+    }
+  }, [hookResult.summary])
 
   useEffect(() => {
     // Update local state when summary changes
@@ -199,7 +201,7 @@ export function CostOptimization() {
             <Loader2 className="w-8 h-8 animate-spin mx-auto text-muted-foreground" />
             <p className="text-muted-foreground">Loading cost optimizations...</p>
             <p className="text-xs text-muted-foreground">
-              {hookResult.error ? `Error: ${hookResult.error.message}` : 'Fetching from API...'}
+              {hookResult.error ? `Error: ${hookResult.error instanceof Error ? hookResult.error.message : 'Unknown error'}` : 'Fetching from API...'}
             </p>
             <p className="text-xs text-muted-foreground opacity-60">
               Will show fallback data if loading takes too long

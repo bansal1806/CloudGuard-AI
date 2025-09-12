@@ -515,7 +515,7 @@ export class AutoScalingService {
   // Helper methods for condition evaluation
   private async getResourceMetric(resourceId: string, metricName: string): Promise<number | null> {
     const cached = await cache.get(`metric:${resourceId}:${metricName}`)
-    if (cached) return cached
+    if (cached && typeof cached === 'number') return cached
 
     // Simulate metric retrieval - in production, get from monitoring system
     const mockMetrics = {

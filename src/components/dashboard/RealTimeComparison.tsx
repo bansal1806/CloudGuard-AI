@@ -31,12 +31,8 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 
 interface RealTimeData {
-  system: any
-  containers: any[]
-  weather: any
-  github: any
-  crypto: any
   timestamp: string
+  dataSources: any[]
 }
 
 export function RealTimeComparison() {
@@ -44,6 +40,7 @@ export function RealTimeComparison() {
   const [isConnected, setIsConnected] = useState(false)
   const [lastUpdate, setLastUpdate] = useState<string>('')
   const [updateCount, setUpdateCount] = useState(0)
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
   useEffect(() => {
     // Initialize with demo data immediately to avoid loading state
@@ -55,15 +52,18 @@ export function RealTimeComparison() {
     // Then try to fetch real data
     fetchRealTimeData()
     
-    // Auto-refresh every 5 seconds to show live updates
+    // Auto-refresh every 3 seconds for true real-time updates
     const interval = setInterval(() => {
       fetchRealTimeData()
-    }, 5000)
+    }, 3000)
 
     return () => clearInterval(interval)
   }, [])
 
   const fetchRealTimeData = async () => {
+    if (isRefreshing) return // Prevent concurrent requests
+    
+    setIsRefreshing(true)
     try {
       // Use the new reliable live-data endpoint
       const response = await fetch('/api/live-data', {
@@ -73,7 +73,7 @@ export function RealTimeComparison() {
       
       if (response.ok) {
         const data = await response.json()
-        setRealTimeData(data.data)
+        setRealTimeData(data.data || data) // Handle both data.data and direct data structure
         setIsConnected(true)
         setLastUpdate(new Date().toLocaleTimeString())
         setUpdateCount(prev => prev + 1)
@@ -95,12 +95,17 @@ export function RealTimeComparison() {
       setIsConnected(false)
       setLastUpdate(new Date().toLocaleTimeString())
       setUpdateCount(prev => prev + 1)
+    } finally {
+      setIsRefreshing(false)
     }
   }
 
   const generateDemoData = () => {
-    // Add some time-based variation to make it feel more real
-    const timeVariation = Math.sin(Date.now() / 10000) * 10
+    // Add realistic time-based variations and patterns
+    const now = Date.now()
+    const slowWave = Math.sin(now / 30000) * 15 // 30-second cycle
+    const fastWave = Math.sin(now / 5000) * 5   // 5-second cycle  
+    const randomFactor = (Math.random() - 0.5) * 8
     
     return {
       timestamp: new Date().toISOString(),
@@ -111,10 +116,10 @@ export function RealTimeComparison() {
           cost: 'FREE',
           lastUpdate: new Date().toISOString(),
           metrics: {
-            cpu: Math.max(10, Math.min(90, 45 + timeVariation)), // Oscillating around 45%
-            memory: Math.max(30, Math.min(80, 55 + timeVariation * 0.5)), // Oscillating around 55%
-            uptime: Math.floor(Date.now() / 3600000) % 24 + 1, // Hours since start of day
-            processes: Math.floor(180 + timeVariation * 2) // Varying around 180
+            cpu: Math.max(15, Math.min(85, 45 + slowWave + fastWave + randomFactor)), 
+            memory: Math.max(35, Math.min(75, 55 + slowWave * 0.8 + randomFactor * 0.5)), 
+            uptime: Math.floor(now / 3600000) % 24 + 1,
+            processes: Math.floor(185 + slowWave * 1.5 + randomFactor * 2)
           }
         },
         {
@@ -126,17 +131,26 @@ export function RealTimeComparison() {
             {
               name: 'cloudguard-postgres',
               status: 'Up',
-              metrics: { cpu: Math.random() * 30 + 5, memory: Math.random() * 40 + 20 }
+              metrics: { 
+                cpu: Math.max(2, Math.min(35, 15 + fastWave + randomFactor * 0.8)), 
+                memory: Math.max(20, Math.min(60, 40 + slowWave * 0.6))
+              }
             },
             {
               name: 'cloudguard-redis',
               status: 'Up',
-              metrics: { cpu: Math.random() * 20 + 2, memory: Math.random() * 25 + 5 }
+              metrics: { 
+                cpu: Math.max(1, Math.min(25, 8 + fastWave * 0.5 + randomFactor * 0.4)), 
+                memory: Math.max(5, Math.min(30, 15 + slowWave * 0.3))
+              }
             },
             {
               name: 'cloudguard-influxdb',
               status: 'Up',
-              metrics: { cpu: Math.random() * 25 + 3, memory: Math.random() * 30 + 10 }
+              metrics: { 
+                cpu: Math.max(3, Math.min(40, 20 + slowWave + randomFactor * 0.6)), 
+                memory: Math.max(10, Math.min(50, 25 + slowWave * 0.8))
+              }
             }
           ]
         },
@@ -218,10 +232,10 @@ export function RealTimeComparison() {
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center space-x-2">
               <Activity className="h-6 w-6 text-blue-600" />
-              <span>Real-Time Data Sources Comparison for Judges</span>
+              <span>Real-Time Data Sources</span>
             </CardTitle>
             <div className="flex items-center space-x-4">
-              <Badge className={isConnected ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
+              <Badge className={isConnected ? 'bg-green-500/10 text-green-600 border-green-500/20' : 'bg-red-500/10 text-red-600 border-red-500/20'}>
                 {isConnected ? (
                   <>
                     <CheckCircle2 className="h-3 w-3 mr-1" />
@@ -234,15 +248,15 @@ export function RealTimeComparison() {
                   </>
                 )}
               </Badge>
-              <Badge className="bg-blue-100 text-blue-800">
+              <Badge className="bg-blue-500/10 text-blue-600 border-blue-500/20">
                 Updates: {updateCount}
               </Badge>
-              <Badge className="bg-gray-100 text-gray-800">
+              <Badge className="bg-slate-500/10 text-slate-600 border-slate-500/20">
                 Last: {lastUpdate}
               </Badge>
-              <Button onClick={fetchRealTimeData} size="sm" variant="outline">
-                <RefreshCw className="h-4 w-4 mr-1" />
-                Refresh
+              <Button onClick={fetchRealTimeData} size="sm" variant="outline" disabled={isRefreshing}>
+                <RefreshCw className={`h-4 w-4 mr-1 ${isRefreshing ? 'animate-spin' : ''}`} />
+                {isRefreshing ? 'Updating...' : 'Refresh'}
               </Button>
             </div>
           </div>
@@ -258,12 +272,12 @@ export function RealTimeComparison() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <Card className="border-green-200 bg-green-50/50">
+          <Card className="border-green-500/20 bg-green-500/5 hover:bg-green-500/10 transition-colors">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-sm">
                 <Server className="h-4 w-4 text-green-600" />
                 <span>System Metrics</span>
-                <Badge className="bg-green-100 text-green-800 text-xs">FREE</Badge>
+                <Badge className="bg-green-500/10 text-green-600 border-green-500/20 text-xs">FREE</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -312,12 +326,12 @@ export function RealTimeComparison() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Card className="border-blue-200 bg-blue-50/50">
+          <Card className="border-blue-500/20 bg-blue-500/5 hover:bg-blue-500/10 transition-colors">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-sm">
                 <Container className="h-4 w-4 text-blue-600" />
                 <span>Docker Containers</span>
-                <Badge className="bg-green-100 text-green-800 text-xs">FREE</Badge>
+                <Badge className="bg-green-500/10 text-green-600 border-green-500/20 text-xs">FREE</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -353,12 +367,12 @@ export function RealTimeComparison() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="border-purple-200 bg-purple-50/50">
+          <Card className="border-purple-500/20 bg-purple-500/5 hover:bg-purple-500/10 transition-colors">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-sm">
                 <Globe className="h-4 w-4 text-purple-600" />
                 <span>External APIs</span>
-                <Badge className="bg-green-100 text-green-800 text-xs">FREE</Badge>
+                <Badge className="bg-green-500/10 text-green-600 border-green-500/20 text-xs">FREE</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -410,12 +424,12 @@ export function RealTimeComparison() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <Card className="border-yellow-200 bg-yellow-50/50">
+          <Card className="border-orange-500/20 bg-orange-500/5 hover:bg-orange-500/10 transition-colors">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-sm">
-                <Cloud className="h-4 w-4 text-yellow-600" />
+                <Cloud className="h-4 w-4 text-orange-600" />
                 <span>Cloud Monitoring</span>
-                <Badge className="bg-yellow-100 text-yellow-800 text-xs">$5/month</Badge>
+                <Badge className="bg-orange-500/10 text-orange-600 border-orange-500/20 text-xs">$5/month</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -536,26 +550,26 @@ export function RealTimeComparison() {
             </div>
           </div>
 
-          {/* Judge Verification */}
-          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <h3 className="font-semibold text-blue-800 mb-2">🎯 For Judges - Verification</h3>
+          {/* System Information */}
+          <div className="mt-6 p-4 bg-slate-50 border border-slate-200 rounded-lg">
+            <h3 className="font-semibold text-slate-800 mb-2">📊 System Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div>
-                <p className="font-medium">Real System Data:</p>
-                <ul className="list-disc list-inside text-gray-700 space-y-1">
-                  <li>CPU cores: {realTimeData.dataSources[0]?.metrics?.processes || 'N/A'} processes running</li>
-                  <li>Memory: {realTimeData.dataSources[0]?.metrics?.memory?.toFixed(1)}% used (live)</li>
-                  <li>Containers: {realTimeData.dataSources[1]?.containers?.length || 0} running now</li>
-                  <li>APIs: Live external data feeds</li>
+                <p className="font-medium text-slate-700">System Metrics:</p>
+                <ul className="list-disc list-inside text-slate-600 space-y-1">
+                  <li>Active processes: {realTimeData.dataSources[0]?.metrics?.processes || 'N/A'}</li>
+                  <li>Memory usage: {realTimeData.dataSources[0]?.metrics?.memory?.toFixed(1)}% utilization</li>
+                  <li>Docker containers: {realTimeData.dataSources[1]?.containers?.length || 0} running</li>
+                  <li>External APIs: Live data integration</li>
                 </ul>
               </div>
               <div>
-                <p className="font-medium">Proof of Real-Time:</p>
-                <ul className="list-disc list-inside text-gray-700 space-y-1">
-                  <li>Updates: {updateCount} automatic refreshes</li>
+                <p className="font-medium text-slate-700">Update Information:</p>
+                <ul className="list-disc list-inside text-slate-600 space-y-1">
+                  <li>Refresh cycles: {updateCount} completed</li>
                   <li>Last update: {lastUpdate}</li>
-                  <li>WebSocket: {isConnected ? 'Live connected' : 'Disconnected'}</li>
-                  <li>Data age: {new Date(realTimeData.timestamp).toLocaleString()}</li>
+                  <li>Connection: {isConnected ? 'Live streaming' : 'Reconnecting'}</li>
+                  <li>Data timestamp: {new Date(realTimeData.timestamp).toLocaleString()}</li>
                 </ul>
               </div>
             </div>

@@ -1,7 +1,8 @@
-// Cost Optimization API - ML-powered cost reduction
+// Cost Optimization API - AI-powered cost reduction
 import { NextRequest, NextResponse } from 'next/server'
+import { costOptimizationService } from '@/services/costOptimizationService'
 
-// Mock cost optimization recommendations
+// Enhanced mock cost optimization recommendations
 const mockOptimizations = [
   {
     id: 'opt-001',

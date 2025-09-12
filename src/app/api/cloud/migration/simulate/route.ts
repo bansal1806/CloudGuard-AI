@@ -79,7 +79,7 @@ function simulateMigration(sourceProvider: string, targetProvider: string, resou
 
   if (complexity === 'high') {
     risks.push({
-      type: 'data_loss' as const,
+      type: 'compatibility' as const,
       severity: 'medium' as const,
       description: 'Risk of data loss during complex migrations',
       mitigation: 'Implement comprehensive backup and validation strategies'
@@ -101,15 +101,16 @@ function simulateMigration(sourceProvider: string, targetProvider: string, resou
 
   if (targetProvider === 'GCP') {
     benefits.push({
-      type: 'features' as const,
+      type: 'performance' as const,
       impact: 'Access to advanced AI/ML services and BigQuery analytics'
     })
   }
 
   if (targetProvider === 'AZURE') {
     benefits.push({
-      type: 'features' as const,
-      impact: 'Better integration with Microsoft ecosystem and hybrid cloud capabilities'
+      type: 'cost_savings' as const,
+      impact: 'Better integration with Microsoft ecosystem and hybrid cloud capabilities',
+      value: 15
     })
   }
 

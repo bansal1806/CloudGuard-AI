@@ -242,8 +242,39 @@ export class MonitoringService {
   }
 
   private triggerAutoScale(alert: AlertHistory) {
-    // In production, trigger auto-scaling actions
+    // Trigger auto-scaling via AutoScalingService
     console.log(`⚡ Auto-scaling triggered for: ${alert.resourceId}`)
+    
+    try {
+      // Import dynamically to avoid circular dependencies
+      import('./autoScalingService').then(({ autoScalingService }) => {
+        // Trigger immediate scaling evaluation for this resource
+        autoScalingService.addScalingPolicy({
+          id: `emergency-${alert.id}`,
+          resourceId: alert.resourceId,
+          name: `Emergency scaling for ${alert.metric} threshold breach`,
+          type: 'horizontal',
+          triggers: [{
+            metric: alert.metric,
+            operator: 'gt',
+            threshold: alert.threshold,
+            duration: 60,
+            evaluationPeriods: 1
+          }],
+          actions: [{
+            type: 'scale_up',
+            parameters: {
+              percentage: 50,
+              maxInstances: 10
+            }
+          }],
+          cooldownPeriod: 300,
+          enabled: true
+        })
+      })
+    } catch (error) {
+      console.error('Failed to trigger auto-scaling:', error)
+    }
   }
 
   private async runMonitoringCycle() {

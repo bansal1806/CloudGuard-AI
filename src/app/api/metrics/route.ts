@@ -49,17 +49,10 @@ function generateMetrics(metricName: string, count: number = 30) {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const resourceId = searchParams.get('resourceId')
+    const resourceId = searchParams.get('resourceId') || 'demo-resource-1'
     const metric = searchParams.get('metric')
     const timeRange = searchParams.get('timeRange') || '1h'
     
-    if (!resourceId) {
-      return NextResponse.json(
-        { error: 'Resource ID is required' },
-        { status: 400 }
-      )
-    }
-
     // Generate metrics based on request
     const metrics: any = {}
     

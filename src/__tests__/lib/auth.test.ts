@@ -1,3 +1,4 @@
+import type { jest } from '@jest/globals'
 import { AuthService } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 
@@ -31,13 +32,13 @@ describe('AuthService', () => {
         email: 'test@example.com',
         name: 'Test User',
         password: 'hashed-password',
-        role: 'USER',
+        role: 'USER' as any,
         createdAt: new Date(),
         updatedAt: new Date(),
       }
 
-      mockPrisma.user.findUnique.mockResolvedValue(null)
-      mockPrisma.user.create.mockResolvedValue(mockUser)
+      (mockPrisma.user.findUnique as jest.Mock).mockResolvedValue(null)
+      (mockPrisma.user.create as jest.Mock).mockResolvedValue(mockUser)
 
       const result = await AuthService.register({
         email: 'test@example.com',
@@ -56,12 +57,12 @@ describe('AuthService', () => {
         email: 'test@example.com',
         name: 'Existing User',
         password: 'hashed-password',
-        role: 'USER',
+        role: 'USER' as any,
         createdAt: new Date(),
         updatedAt: new Date(),
       }
 
-      mockPrisma.user.findUnique.mockResolvedValue(existingUser)
+      (mockPrisma.user.findUnique as jest.Mock).mockResolvedValue(existingUser)
 
       await expect(
         AuthService.register({
@@ -79,12 +80,12 @@ describe('AuthService', () => {
         email: 'test@example.com',
         name: 'Test User',
         password: 'hashed-password',
-        role: 'USER',
+        role: 'USER' as any,
         createdAt: new Date(),
         updatedAt: new Date(),
       }
 
-      mockPrisma.user.findUnique.mockResolvedValue(mockUser)
+      (mockPrisma.user.findUnique as jest.Mock).mockResolvedValue(mockUser)
 
       const result = await AuthService.login({
         email: 'test@example.com',
@@ -96,7 +97,7 @@ describe('AuthService', () => {
     })
 
     it('should throw error for invalid credentials', async () => {
-      mockPrisma.user.findUnique.mockResolvedValue(null)
+      (mockPrisma.user.findUnique as jest.Mock).mockResolvedValue(null)
 
       await expect(
         AuthService.login({
@@ -113,7 +114,7 @@ describe('AuthService', () => {
         id: '1',
         email: 'test@example.com',
         name: 'Test User',
-        role: 'USER',
+        role: 'USER' as any,
       }
 
       const token = AuthService.generateToken(user)

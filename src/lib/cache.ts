@@ -18,12 +18,14 @@ class CacheService {
     try {
       this.redis = Redis.createClient({
         url: process.env.REDIS_URL || 'redis://localhost:6379',
-        retry_strategy: (options) => {
-          if (options.error && options.error.code === 'ECONNREFUSED') {
-            console.warn('Redis server is not available, using fallback cache')
-            return undefined
+        socket: {
+          reconnectStrategy: (retries) => {
+            if (retries > 10) {
+              console.warn('Redis server is not available, using fallback cache')
+              return false
+            }
+            return Math.min(retries * 100, 3000)
           }
-          return Math.min(options.attempt * 100, 3000)
         }
       })
 

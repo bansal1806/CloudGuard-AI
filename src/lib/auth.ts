@@ -1,10 +1,10 @@
-import { sign, verify } from 'jsonwebtoken'
+import { sign, verify, type SignOptions } from 'jsonwebtoken'
 import { hash, compare } from 'bcryptjs'
 import { prisma } from './db'
 import type { User } from '@prisma/client'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key'
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d'
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key-for-development-only'
+const JWT_EXPIRES_IN: string | number = process.env.JWT_EXPIRES_IN || '7d'
 
 export interface AuthUser {
   id: string
@@ -34,16 +34,18 @@ export class AuthService {
   }
 
   static generateToken(user: AuthUser): string {
-    return sign(
-      {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role
-      },
-      JWT_SECRET,
-      { expiresIn: JWT_EXPIRES_IN }
-    )
+    const payload = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role
+    }
+    
+    const options: SignOptions = {
+      expiresIn: '7d'
+    }
+    
+    return sign(payload, JWT_SECRET, options)
   }
 
   static verifyToken(token: string): AuthUser | null {
@@ -79,7 +81,7 @@ export class AuthService {
         email: credentials.email,
         name: credentials.name,
         password: hashedPassword,
-        role: 'USER'
+        role: 'USER' as any as any
       }
     })
 

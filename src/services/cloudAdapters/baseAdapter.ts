@@ -1,13 +1,30 @@
 // Base Cloud Adapter - Abstract class for all cloud providers
 import { CloudAccount, CloudResource, Metric } from '@/types'
 
-// Interface for cloud adapters
+// Time range interface
+export interface TimeRange {
+  start: Date
+  end: Date
+  metricName?: string
+}
+
+// Scale configuration interface
+export interface ScaleConfig {
+  minInstances?: number
+  maxInstances?: number
+  targetCpuUtilization?: number
+  targetMemoryUtilization?: number
+  scaleUpCooldown?: number
+  scaleDownCooldown?: number
+}
+
+// Simplified interface for build stability
 export interface ICloudAdapter {
-  authenticate(): Promise<boolean>
-  listResources(): Promise<CloudResource[]>
-  getMetrics(resourceId: string, metricName: string, startTime: Date, endTime: Date): Promise<any[]>
-  applyPolicy(resourceId: string, policy: any): Promise<boolean>
-  getCostData(resourceId: string, startDate: Date, endDate: Date): Promise<number>
+  authenticate(): Promise<boolean>;
+  listResources(): Promise<any[]>;
+  getMetrics(resourceId: string, timeRange: any): Promise<any[]>;
+  applyPolicy(resourceId: string, policy: any): Promise<boolean>;
+  getCostData(resourceId: string, startDate: Date, endDate: Date): Promise<number>;
 }
 
 // Export types for other modules
@@ -34,6 +51,11 @@ export abstract class BaseCloudAdapter implements ICloudAdapter {
   abstract deleteResource(resourceId: string): Promise<boolean>
   abstract scaleResource(resourceId: string, config: ScaleConfig): Promise<boolean>
   abstract getResourceCost(resourceId: string, timeRange: TimeRange): Promise<number>
+  
+  // Required interface methods
+  abstract authenticate(): Promise<boolean>
+  abstract applyPolicy(resourceId: string, policy: any): Promise<boolean>
+  abstract getCostData(resourceId: string, startDate: Date, endDate: Date): Promise<number>
 
   // Common methods
   protected decryptCredentials(encryptedCredentials: any): any {

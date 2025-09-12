@@ -26,8 +26,8 @@ export async function POST(request: NextRequest) {
       name: accountName || `${provider} Account`,
       provider: provider.toUpperCase(),
       region: region || 'us-east-1',
-      credentials: JSON.stringify(credentials), // In production, encrypt this
-      status: 'ACTIVE' as any,
+      credentials: credentials, // In production, encrypt this
+      status: 'ACTIVE' as any as any,
       isActive: true,
       createdAt: new Date(),
       updatedAt: new Date()

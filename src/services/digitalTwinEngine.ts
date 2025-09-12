@@ -1,5 +1,5 @@
 // Digital Twin Engine - Core AI-powered virtual replica system
-import { DigitalTwin, Simulation, Prediction, CloudResource } from '@/types'
+import { DigitalTwin, Simulation, Prediction, CloudResource, SimulationStatus, PredictionStatus } from '@/types'
 
 export class DigitalTwinEngine {
   private twins: Map<string, DigitalTwin> = new Map()
@@ -69,7 +69,7 @@ export class DigitalTwinEngine {
       parameters,
       results: {},
       duration: 0,
-      status: 'RUNNING',
+      status: 'RUNNING' as any as any,
       startedAt: new Date(),
       completedAt: null,
     }
@@ -85,7 +85,7 @@ export class DigitalTwinEngine {
       const endTime = Date.now()
       simulation.duration = Math.round((endTime - startTime) / 1000)
       simulation.results = results
-      simulation.status = 'COMPLETED'
+      simulation.status = 'COMPLETED' as any
       simulation.completedAt = new Date()
       
       // Update twin's last simulation time
@@ -93,7 +93,7 @@ export class DigitalTwinEngine {
       twin.updatedAt = new Date()
 
     } catch (error) {
-      simulation.status = 'FAILED'
+      simulation.status = 'FAILED' as any
       simulation.results = { error: error instanceof Error ? error.message : 'Unknown error' }
       simulation.completedAt = new Date()
     }
@@ -279,7 +279,7 @@ export class DigitalTwinEngine {
       confidence: this.calculateConfidence(twin, type),
       prediction: await this.generatePredictionData(twin, type),
       actualOutcome: null,
-      status: 'PENDING',
+      status: 'PENDING' as any,
       createdAt: new Date(),
       validatedAt: null,
     }
@@ -384,7 +384,7 @@ export class DigitalTwinEngine {
         const accuracy = this.calculatePredictionAccuracy(prediction, previousState, currentState)
         
         prediction.actualOutcome = currentState
-        prediction.status = 'VALIDATED'
+        prediction.status = 'VALIDATED' as any
         prediction.validatedAt = new Date()
         
         // Update twin accuracy based on prediction performance

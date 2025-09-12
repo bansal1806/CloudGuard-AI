@@ -98,6 +98,93 @@ export function getWebSocketServer(): SocketIOServer | null {
 }
 
 // Utility functions for broadcasting
+// Client-side WebSocket client (mock for development)
+export class WSClient {
+  private listeners: Record<string, Function[]> = {}
+  private connected = false
+
+  connect() {
+    this.connected = true
+    // Use setTimeout to ensure listeners are set up first
+    setTimeout(() => {
+      this.emit('connection', { status: 'connected' })
+    }, 100)
+  }
+
+  disconnect() {
+    this.connected = false
+    this.emit('connection', { status: 'disconnected' })
+  }
+
+  on(event: string, callback: Function) {
+    if (!this.listeners[event]) {
+      this.listeners[event] = []
+    }
+    this.listeners[event].push(callback)
+  }
+
+  off(event: string, callback: Function) {
+    if (this.listeners[event]) {
+      this.listeners[event] = this.listeners[event].filter(cb => cb !== callback)
+    }
+  }
+
+  private emit(event: string, data: any) {
+    if (this.listeners[event]) {
+      this.listeners[event].forEach(callback => callback(data))
+    }
+  }
+
+  isConnected() {
+    return this.connected
+  }
+
+  // Mock method to simulate receiving metrics
+  simulateMetrics(data: any) {
+    this.emit('metrics', data)
+  }
+}
+
+export const wsClient = new WSClient()
+
+// Mock data generator for development
+export class MockDataGenerator {
+  private interval: NodeJS.Timeout | null = null
+  private isRunning = false
+
+  start() {
+    if (this.isRunning) return
+    this.isRunning = true
+
+    this.interval = setInterval(() => {
+      const mockData = {
+        resourceId: 'demo-resource-1',
+        timestamp: new Date().toISOString(),
+        data: {
+          cpu: Math.random() * 100,
+          memory: Math.random() * 100,
+          disk: Math.random() * 100,
+          network: Math.random() * 1000,
+          requests: Math.floor(Math.random() * 1000),
+          errors: Math.floor(Math.random() * 10),
+          latency: Math.random() * 500
+        }
+      }
+      wsClient.simulateMetrics(mockData)
+    }, 2000) // Update every 2 seconds
+  }
+
+  stop() {
+    if (this.interval) {
+      clearInterval(this.interval)
+      this.interval = null
+    }
+    this.isRunning = false
+  }
+}
+
+export const mockDataGenerator = new MockDataGenerator()
+
 export class WebSocketService {
   static broadcastMetrics(resourceId: string, metrics: any) {
     if (!io) return

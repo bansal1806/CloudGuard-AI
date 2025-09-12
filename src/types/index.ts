@@ -27,6 +27,7 @@ export interface CloudAccount {
   organizationId: string
   name: string
   provider: CloudProvider
+  credentials: Record<string, any>
   region: string
   status: AccountStatus
   lastSyncAt?: Date

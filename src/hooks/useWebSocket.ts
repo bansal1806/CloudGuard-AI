@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { io, Socket } from 'socket.io-client'
 
 interface UseWebSocketOptions {
@@ -21,7 +21,7 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
     error: null
   })
 
-  const connect = () => {
+  const connect = useCallback(() => {
     if (socketRef.current?.connected) return
 
     setState(prev => ({ ...prev, connecting: true, error: null }))
@@ -47,7 +47,7 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
     })
 
     socketRef.current = socket
-  }
+  }, [token])
 
   const disconnect = () => {
     if (socketRef.current) {
@@ -83,7 +83,7 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
     return () => {
       disconnect()
     }
-  }, [autoConnect, token])
+  }, [autoConnect, token, connect])
 
   return {
     ...state,

@@ -262,7 +262,7 @@ export function D3NetworkGraph({
       })
 
     // Prediction indicators for digital twins
-    node.filter(d => d.type === 'twin' && d.predictions)
+    node.filter(d => d.type === 'twin' && d.predictions != null)
       .append("circle")
       .attr("r", 30)
       .attr("fill", "none")

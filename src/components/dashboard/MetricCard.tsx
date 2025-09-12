@@ -12,6 +12,8 @@ interface MetricCardProps {
   trend?: string
   type: 'success' | 'warning' | 'error' | 'info'
   className?: string
+  onClick?: () => void
+  description?: string
 }
 
 export function MetricCard({ 
@@ -20,7 +22,8 @@ export function MetricCard({
   icon, 
   trend, 
   type,
-  className 
+  className,
+  description
 }: MetricCardProps) {
   const isPositiveTrend = trend?.startsWith('+')
   const isNegativeTrend = trend?.startsWith('-')
@@ -85,6 +88,9 @@ export function MetricCard({
             <div className="space-y-1">
               <p className="text-2xl font-bold tracking-tight">{value}</p>
               <p className="text-sm text-muted-foreground">{title}</p>
+              {description && (
+                <p className="text-xs text-muted-foreground/70 mt-1">{description}</p>
+              )}
             </div>
           </div>
 

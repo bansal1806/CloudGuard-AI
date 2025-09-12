@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { monitoringService } from '@/services/monitoringService'
+import { monitoringService, type MonitoringRule } from '@/services/monitoringService'
 import { z } from 'zod'
 
 const ruleSchema = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   name: z.string(),
   resourceId: z.string().optional(),
   metric: z.string(),
@@ -37,13 +37,20 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const rule = ruleSchema.parse(body)
+    const parsedRule = ruleSchema.parse(body)
     
-    monitoringService.addRule(rule)
+    // Generate ID if not provided and ensure all required fields
+    const ruleWithId = {
+      ...parsedRule,
+      id: parsedRule.id || `rule-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+    }
+    
+    // Type assertion since we know all required fields are present after parsing
+    monitoringService.addRule(ruleWithId as MonitoringRule)
     
     return NextResponse.json({
       success: true,
-      rule,
+      rule: ruleWithId,
       message: 'Monitoring rule added successfully'
     })
   } catch (error: any) {

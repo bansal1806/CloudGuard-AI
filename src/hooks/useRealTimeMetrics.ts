@@ -60,6 +60,9 @@ export function useRealTimeMetrics(resourceId: string = 'demo-resource-1') {
       setIsConnected(data.status === 'connected')
     }
 
+    // Check initial connection state
+    setIsConnected(wsClient.isConnected())
+
     const handleMetrics = (data: any) => {
       if (data.resourceId === resourceId || !data.resourceId) {
         setCurrentMetrics(data.data)

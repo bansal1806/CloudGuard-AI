@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
       externalId: `resource-${resourceId}`,
       name: `Resource ${resourceId}`,
       type: 'COMPUTE' as any,
-      status: 'RUNNING' as any,
+      status: 'RUNNING' as any as any,
       region: 'us-east-1',
       tags: { Environment: 'production' },
       configuration: { instanceType: 't3.medium', cpu: 2, memory: 4 },

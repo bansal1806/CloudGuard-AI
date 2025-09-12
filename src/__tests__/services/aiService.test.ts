@@ -1,3 +1,4 @@
+import type { jest } from '@jest/globals'
 import { aiService } from '@/services/aiService'
 import type { PredictionRequest, AnomalyDetectionRequest, CostOptimizationRequest } from '@/services/aiService'
 

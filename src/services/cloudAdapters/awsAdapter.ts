@@ -204,6 +204,29 @@ export class AWSAdapter extends BaseCloudAdapter {
     return mockBuckets.map(bucket => this.formatResource(bucket))
   }
 
+  // Required interface methods
+  async authenticate(): Promise<boolean> {
+    return this.testConnection()
+  }
+
+  async applyPolicy(resourceId: string, policy: any): Promise<boolean> {
+    try {
+      console.log(`Applying policy to AWS resource ${resourceId}:`, policy)
+      // Mock policy application
+      return true
+    } catch (error) {
+      this.handleError(error, 'applyPolicy')
+    }
+  }
+
+  async getCostData(resourceId: string, startDate: Date, endDate: Date): Promise<number> {
+    const timeRange: TimeRange = {
+      start: startDate,
+      end: endDate
+    }
+    return this.getResourceCost(resourceId, timeRange)
+  }
+
   // Helper methods
   private generateMockAWSResources(): any[] {
     return [

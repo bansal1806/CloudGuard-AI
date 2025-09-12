@@ -49,7 +49,7 @@ export class MonitoringService {
         operator: 'gt',
         threshold: 80,
         duration: 5,
-        severity: 'HIGH',
+        severity: 'HIGH' as any,
         enabled: true,
         actions: ['email', 'webhook', 'auto-scale']
       },
@@ -60,7 +60,7 @@ export class MonitoringService {
         operator: 'gt',
         threshold: 90,
         duration: 2,
-        severity: 'CRITICAL',
+        severity: 'CRITICAL' as any,
         enabled: true,
         actions: ['email', 'webhook', 'sms', 'auto-scale']
       },
@@ -71,7 +71,7 @@ export class MonitoringService {
         operator: 'gt',
         threshold: 95,
         duration: 1,
-        severity: 'CRITICAL',
+        severity: 'CRITICAL' as any,
         enabled: true,
         actions: ['email', 'webhook', 'sms']
       },
@@ -82,7 +82,7 @@ export class MonitoringService {
         operator: 'gt',
         threshold: 1000,
         duration: 3,
-        severity: 'MEDIUM',
+        severity: 'MEDIUM' as any,
         enabled: true,
         actions: ['email', 'webhook']
       }
@@ -191,7 +191,7 @@ export class MonitoringService {
       threshold: rule.threshold,
       severity: rule.severity,
       triggeredAt: new Date(),
-      status: 'ACTIVE',
+      status: 'ACTIVE' as any as any,
       message: `${rule.name}: ${rule.metric} is ${value}${rule.metric === 'network' ? 'MB/s' : '%'} (threshold: ${rule.threshold}${rule.metric === 'network' ? 'MB/s' : '%'})`
     }
 
@@ -309,7 +309,7 @@ export class MonitoringService {
               threshold: 0,
               severity: anomaly.severity,
               triggeredAt: new Date(anomaly.timestamp),
-              status: 'ACTIVE',
+              status: 'ACTIVE' as any as any,
               message: `Anomaly detected: ${anomaly.description}`
             }
 

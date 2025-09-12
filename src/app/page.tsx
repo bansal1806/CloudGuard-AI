@@ -18,6 +18,7 @@ import {
   Eye,
   Cpu
 } from 'lucide-react'
+import { toast } from 'sonner'
 
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
 import { MetricCard } from '@/components/dashboard/MetricCard'
@@ -62,6 +63,35 @@ export default function DashboardPage() {
       clearInterval(updateInterval)
     }
   }, [])
+
+  const handleMetricClick = (metricType: string, value: string) => {
+    switch(metricType) {
+      case 'resources':
+        toast.info(`Viewing details for ${value} total resources`)
+        // Navigate to resources page
+        break
+      case 'alerts':
+        toast.warning(`Checking ${value} active alerts`)
+        // Navigate to alerts page
+        break
+      case 'savings':
+        toast.success(`Cost savings details: ${value}`)
+        // Navigate to cost optimization page
+        break
+      case 'uptime':
+        toast.info(`System uptime: ${value}`)
+        // Navigate to performance metrics
+        break
+      case 'ai':
+        toast.info(`AI accuracy: ${value}`)
+        // Navigate to AI insights
+        break
+      case 'twins':
+        toast.info(`Managing ${value} digital twins`)
+        // Navigate to digital twins page
+        break
+    }
+  }
 
   if (isLoading) {
     return (

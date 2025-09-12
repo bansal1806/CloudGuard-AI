@@ -19,6 +19,7 @@ import {
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
 
 interface DigitalTwinNode {
   id: string
@@ -76,6 +77,7 @@ export function DigitalTwinVisualization() {
   ])
 
   const [isPlaying, setIsPlaying] = useState(true)
+  const [isResetting, setIsResetting] = useState(false)
   const [selectedTwin, setSelectedTwin] = useState<string | null>(null)
 
   useEffect(() => {
@@ -138,9 +140,12 @@ export function DigitalTwinVisualization() {
           </div>
           <div className="flex items-center space-x-2">
             <Button
-              variant="outline"
+              variant={isPlaying ? "default" : "outline"}
               size="sm"
-              onClick={() => setIsPlaying(!isPlaying)}
+              onClick={() => {
+                setIsPlaying(!isPlaying)
+                toast.success(isPlaying ? 'Digital Twin synchronization paused' : 'Digital Twin synchronization resumed')
+              }}
             >
               {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
               {isPlaying ? 'Pause' : 'Play'}
@@ -148,16 +153,34 @@ export function DigitalTwinVisualization() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => {
+              disabled={isResetting}
+              onClick={async () => {
+                setIsResetting(true)
+                toast.info('Resetting Digital Twin ecosystem...')
+                
+                // Reset simulation with animation
                 setTwins(prev => prev.map(twin => ({
                   ...twin,
-                  status: 'active',
-                  accuracy: 90 + Math.random() * 10
+                  status: 'syncing' as const,
+                  accuracy: 0,
+                  predictions: 0
                 })))
+
+                // Simulate reset process
+                setTimeout(() => {
+                  setTwins(prev => prev.map(twin => ({
+                    ...twin,
+                    status: 'active' as const,
+                    accuracy: 85 + Math.random() * 15,
+                    predictions: Math.floor(Math.random() * 20) + 5
+                  })))
+                  setIsResetting(false)
+                  toast.success('Digital Twin ecosystem reset successfully!')
+                }, 2000)
               }}
             >
-              <RotateCcw className="w-4 h-4" />
-              Reset
+              <RotateCcw className={`w-4 h-4 ${isResetting ? 'animate-spin' : ''}`} />
+              {isResetting ? 'Resetting...' : 'Reset'}
             </Button>
           </div>
         </div>
@@ -207,17 +230,21 @@ export function DigitalTwinVisualization() {
             {twins.map((twin, index) => (
               <motion.div
                 key={twin.id}
-                className={`absolute cursor-pointer`}
+                className={`absolute cursor-pointer ${selectedTwin === twin.id ? 'z-10' : 'z-0'}`}
                 style={{ 
                   left: twin.position.x, 
                   top: twin.position.y 
                 }}
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  setSelectedTwin(selectedTwin === twin.id ? null : twin.id)
+                  toast.info(`${selectedTwin === twin.id ? 'Deselected' : 'Selected'} ${twin.name} - Accuracy: ${twin.accuracy.toFixed(1)}%`)
+                }}
                 exit={{ scale: 0, opacity: 0 }}
                 transition={{ delay: index * 0.1 }}
-                whileHover={{ scale: 1.1 }}
-                onClick={() => setSelectedTwin(selectedTwin === twin.id ? null : twin.id)}
               >
                 {/* Node Circle */}
                 <div className={`

@@ -202,20 +202,26 @@ export async function POST(request: NextRequest) {
 
     switch (action) {
       case 'apply':
-        result.details = `Cost optimization ${optimizationId} applied successfully`
-        result.estimatedCompletion = 'Immediate'
+        result.details = `Cost optimization "${optimization.title}" is being applied. Expected savings: $${optimization.savings.toFixed(2)}/month`
+        result.estimatedCompletion = optimization.type === 'spot' ? '5 minutes' : optimization.type === 'reserved' ? '1 hour' : '15 minutes'
         result.status = 'in_progress'
+        // Update the optimization status in the mock data
+        optimization.status = 'in_progress'
         break
       case 'schedule':
-        result.details = `Cost optimization ${optimizationId} scheduled for implementation`
+        result.details = `Cost optimization "${optimization.title}" scheduled for implementation during maintenance window`
         result.estimatedCompletion = '24 hours'
+        result.status = 'scheduled'
+        optimization.status = 'scheduled'
         break
       case 'dismiss':
-        result.details = `Cost optimization ${optimizationId} dismissed`
+        result.details = `Cost optimization "${optimization.title}" dismissed by user`
+        result.status = 'dismissed'
         break
       case 'analyze':
-        result.details = `Detailed analysis generated for optimization ${optimizationId}`
+        result.details = `Detailed analysis generated for optimization "${optimization.title}"`
         result.estimatedCompletion = 'Immediate'
+        result.status = 'completed'
         break
       default:
         result.details = `Unknown action ${action} for optimization ${optimizationId}`

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Bell, 
   Settings, 
@@ -11,17 +11,64 @@ import {
   Brain,
   Zap,
   Shield,
-  Activity
+  Activity,
+  X,
+  ChevronDown,
+  LogOut,
+  UserCircle,
+  Palette
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { toast } from 'sonner'
 
 export function DashboardHeader() {
+  const [showNotifications, setShowNotifications] = useState(false)
+  const [showUserMenu, setShowUserMenu] = useState(false)
+  const [showSearch, setShowSearch] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  
   const [notifications] = useState([
-    { id: 1, title: 'Cost optimization opportunity detected', type: 'info', time: '2m ago' },
-    { id: 2, title: 'Security threat mitigated automatically', type: 'success', time: '5m ago' },
-    { id: 3, title: 'Predictive scaling activated', type: 'warning', time: '10m ago' },
+    { id: 1, title: 'Cost optimization opportunity detected', type: 'info', time: '2m ago', description: 'Potential savings of $234/month identified' },
+    { id: 2, title: 'Security threat mitigated automatically', type: 'success', time: '5m ago', description: 'Suspicious activity blocked from 192.168.1.100' },
+    { id: 3, title: 'Predictive scaling activated', type: 'warning', time: '10m ago', description: 'Auto-scaled web servers based on traffic prediction' },
   ])
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      toast.success(`Searching for: ${searchQuery}`)
+      // Implement search functionality here
+    }
+    setShowSearch(!showSearch)
+  }
+
+  const handleNotificationClick = (notification) => {
+    toast.info(`${notification.title}`)
+    // Mark as read or navigate to detailed view
+  }
+
+  const handleSettingsClick = () => {
+    toast.info('Opening settings...')
+    // Navigate to settings page
+  }
+
+  const handleUserMenuClick = (action) => {
+    switch(action) {
+      case 'profile':
+        toast.info('Opening user profile...')
+        break
+      case 'settings':
+        toast.info('Opening user settings...')
+        break
+      case 'logout':
+        toast.success('Logging out...')
+        // Implement logout logic
+        break
+      default:
+        break
+    }
+    setShowUserMenu(false)
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

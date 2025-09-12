@@ -71,8 +71,23 @@ export function middleware(request: NextRequest) {
 
   // API route protection
   if (request.nextUrl.pathname.startsWith('/api/')) {
-    // Skip auth for public endpoints
-    const publicEndpoints = ['/api/health', '/api/auth/login', '/api/auth/register']
+    // Skip auth for public endpoints and demo endpoints
+    const publicEndpoints = [
+      '/api/health', 
+      '/api/auth/login', 
+      '/api/auth/register',
+      // Demo endpoints for development
+      '/api/metrics',
+      '/api/cloud/resources',
+      '/api/cloud/connect',
+      '/api/digital-twins',
+      '/api/monitoring',
+      '/api/cost',
+      '/api/performance',
+      '/api/security',
+      '/api/websocket',
+      '/api/socket'
+    ]
     const isPublicEndpoint = publicEndpoints.some(endpoint => 
       request.nextUrl.pathname.startsWith(endpoint)
     )

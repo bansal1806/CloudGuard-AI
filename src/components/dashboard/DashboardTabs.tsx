@@ -6,6 +6,7 @@ import {
   Activity, 
   Shield, 
   Eye, 
+  Brain,
   Cloud, 
   Server, 
   DollarSign,
@@ -25,7 +26,7 @@ import { CostOptimization } from './CostOptimization'
 import { DataSourcesOverview } from './DataSourcesOverview'
 import { RealTimeComparison } from './RealTimeComparison'
 import { SecurityGuardian } from './SecurityGuardian'
-import { DigitalTwinVisualization } from './DigitalTwinVisualization'
+import { IntelligentInfrastructureManager } from './IntelligentInfrastructureManager'
 import { CloudProviderOverview } from './CloudProviderOverview'
 import { ResourcesTable } from './ResourcesTable'
 
@@ -52,10 +53,10 @@ export function DashboardTabs() {
       description: 'Security monitoring and threats'
     },
     {
-      id: 'twins',
-      label: 'Digital Twins',
-      icon: <Eye className="h-4 w-4" />,
-      description: 'Infrastructure digital twins'
+      id: 'ai-optimizer',
+      label: 'AI Optimizer',
+      icon: <Brain className="h-4 w-4" />,
+      description: 'AI-powered infrastructure optimization'
     },
     {
       id: 'cloud',
@@ -168,18 +169,18 @@ export function DashboardTabs() {
                 </motion.div>
               </TabsContent>
 
-              {/* Digital Twins Tab */}
-              <TabsContent value="twins" className="space-y-6">
+              {/* AI Infrastructure Optimizer Tab */}
+              <TabsContent value="ai-optimizer" className="space-y-6">
                 <div className="text-center mb-4">
-                  <h2 className="text-xl font-semibold">Digital Twin Infrastructure</h2>
-                  <p className="text-sm text-muted-foreground">Virtual replicas of your cloud infrastructure</p>
+                  <h2 className="text-xl font-semibold">AI Infrastructure Optimizer</h2>
+                  <p className="text-sm text-muted-foreground">AI-powered performance monitoring and cost optimization</p>
                 </div>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <DigitalTwinVisualization />
+                  <IntelligentInfrastructureManager />
                 </motion.div>
               </TabsContent>
 

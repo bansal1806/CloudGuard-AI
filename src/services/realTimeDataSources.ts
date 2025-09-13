@@ -118,7 +118,7 @@ export class SystemMetricsSource implements DataSource {
   private getNetworkStats(): number {
     const interfaces = os.networkInterfaces()
     let totalRx = 0
-    let totalTx = 0
+    const totalTx = 0
     
     // This is a simplified version - in production you'd track deltas
     Object.values(interfaces).forEach(iface => {
@@ -307,19 +307,30 @@ export class PublicAPISource implements DataSource {
     try {
       // Using OpenWeatherMap free tier - no API key needed for demo
       // For judges: This is a real API call but using public endpoint
+      // Create AbortController for timeout
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 5000)
+
       const response = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?q=London&appid=demo&units=metric`,
-        { timeout: 5000 }
+        { signal: controller.signal }
       )
       
+      clearTimeout(timeoutId)
+      
       // Since demo API key won't work, use a real free weather API
+      const controller2 = new AbortController()
+      const timeoutId2 = setTimeout(() => controller2.abort(), 5000)
+      
       const freeWeatherResponse = await fetch(
         'https://wttr.in/London?format=j1',
         { 
-          timeout: 5000,
+          signal: controller2.signal,
           headers: { 'User-Agent': 'CloudGuard-AI/1.0' }
         }
       )
+      
+      clearTimeout(timeoutId2)
       
       if (freeWeatherResponse.ok) {
         const data = await freeWeatherResponse.json()
@@ -355,13 +366,18 @@ export class PublicAPISource implements DataSource {
   private async getGitHubMetrics() {
     try {
       // GitHub API is free with rate limits - real API call for judges
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 5000)
+      
       const response = await fetch('https://api.github.com/repos/microsoft/vscode', {
-        timeout: 5000,
+        signal: controller.signal,
         headers: {
           'User-Agent': 'CloudGuard-AI/1.0',
           'Accept': 'application/vnd.github.v3+json'
         }
       })
+      
+      clearTimeout(timeoutId)
       
       if (response.ok) {
         const data = await response.json()
@@ -398,15 +414,20 @@ export class PublicAPISource implements DataSource {
   private async getCryptoMetrics() {
     try {
       // CoinGecko API is free - real API call for judges
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 5000)
+      
       const response = await fetch(
         'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,cardano&vs_currencies=usd&include_24hr_change=true&include_market_cap=true',
         { 
-          timeout: 5000,
+          signal: controller.signal,
           headers: {
             'User-Agent': 'CloudGuard-AI/1.0'
           }
         }
       )
+      
+      clearTimeout(timeoutId)
       
       if (response.ok) {
         const data = await response.json()

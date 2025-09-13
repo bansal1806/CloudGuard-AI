@@ -823,13 +823,4 @@ interface AlertThreshold {
 // Export singleton instance
 export const enhancedDigitalTwinEngine = new EnhancedDigitalTwinEngine()
 
-// Export types
-export type {
-  EnhancedDigitalTwin,
-  DigitalTwinState,
-  RealTimeMetrics,
-  PredictiveModel,
-  AnomalyDetection,
-  Recommendation,
-  SimulationScenario
-}
+// Types are already exported at their declarations

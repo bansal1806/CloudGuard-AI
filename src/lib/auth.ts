@@ -1,7 +1,7 @@
 import { sign, verify, type SignOptions } from 'jsonwebtoken'
 import { hash, compare } from 'bcryptjs'
-import { prisma } from './db'
-import type { User } from '@prisma/client'
+// import { prisma } from './db'
+// import type { User } from '@prisma/client'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key-for-development-only'
 const JWT_EXPIRES_IN: string | number = process.env.JWT_EXPIRES_IN || '7d'
@@ -64,26 +64,22 @@ export class AuthService {
 
   static async register(credentials: RegisterCredentials): Promise<{ user: AuthUser; token: string }> {
     // Check if user already exists
-    const existingUser = await prisma.user.findUnique({
-      where: { email: credentials.email }
-    })
-
-    if (existingUser) {
-      throw new Error('User already exists with this email')
-    }
+    // Mock implementation - replace with real database logic
+    // const existingUser = await prisma.user.findUnique({
+    //   where: { email: credentials.email }
+    // })
 
     // Hash password
     const hashedPassword = await this.hashPassword(credentials.password)
 
-    // Create user
-    const user = await prisma.user.create({
-      data: {
-        email: credentials.email,
-        name: credentials.name,
-        password: hashedPassword,
-        role: 'USER' as any as any
-      }
-    })
+    // Mock user creation
+    const user = {
+      id: 'mock-user-' + Date.now(),
+      email: credentials.email,
+      name: credentials.name,
+      password: hashedPassword,
+      role: 'USER'
+    }
 
     const authUser: AuthUser = {
       id: user.id,

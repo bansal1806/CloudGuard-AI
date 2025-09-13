@@ -2,17 +2,14 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Cloud, Monitor, DollarSign, Eye, Brain } from 'lucide-react'
+import { Cloud, Eye, Brain } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 
 // Import the three enhanced sections
 import { EnhancedMultiCloudOverview } from './EnhancedMultiCloudOverview'
-import { EnhancedResourceManagement } from './EnhancedResourceManagement'
-import { EnhancedCostOptimization } from './EnhancedCostOptimization'
-
-type SectionType = 'multicloud' | 'resources' | 'cost'
+type SectionType = 'multicloud'
 
 interface SectionInfo {
   id: SectionType
@@ -39,36 +36,6 @@ const sections: SectionInfo[] = [
       'Auto-sync capabilities'
     ]
   },
-  {
-    id: 'resources',
-    title: 'Resource Management',
-    description: 'Comprehensive resource monitoring and control with live Digital Twin integration',
-    icon: <Monitor className="w-6 h-6" />,
-    color: 'green',
-    features: [
-      'Live resource monitoring',
-      'Digital Twin integration',
-      'Real-time utilization tracking',
-      'Remote resource control',
-      'Security scoring',
-      'Performance metrics'
-    ]
-  },
-  {
-    id: 'cost',
-    title: 'Cost Optimization',
-    description: 'AI-powered cost analysis and optimization recommendations with automated savings',
-    icon: <DollarSign className="w-6 h-6" />,
-    color: 'orange',
-    features: [
-      'AI-powered recommendations',
-      'Real-time cost tracking',
-      'Automated optimizations',
-      'Savings forecasting',
-      'Budget monitoring',
-      'ROI analysis'
-    ]
-  }
 ]
 
 export function ThreeEnhancedSections() {
@@ -109,16 +76,7 @@ export function ThreeEnhancedSections() {
   }
 
   const renderActiveSection = () => {
-    switch (activeSection) {
-      case 'multicloud':
-        return <EnhancedMultiCloudOverview />
-      case 'resources':
-        return <EnhancedResourceManagement />
-      case 'cost':
-        return <EnhancedCostOptimization />
-      default:
-        return <EnhancedMultiCloudOverview />
-    }
+    return <EnhancedMultiCloudOverview />
   }
 
   return (
@@ -129,9 +87,9 @@ export function ThreeEnhancedSections() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Brain className="w-6 h-6 text-slate-600" />
-              <CardTitle>Enhanced CloudGuard AI Sections</CardTitle>
+              <CardTitle>Multi-Cloud Management</CardTitle>
               <Badge variant="outline" className="text-xs">
-                Three Complete Real-Time Systems
+                Complete Real-Time System
               </Badge>
             </div>
             <div className="flex items-center space-x-2">

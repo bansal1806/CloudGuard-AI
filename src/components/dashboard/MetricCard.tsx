@@ -73,7 +73,7 @@ export function MetricCard({
                   'flex items-center text-xs font-medium px-2 py-1 rounded-full',
                   isPositiveTrend ? 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/20' :
                   isNegativeTrend ? 'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900/20' :
-                  'text-gray-600 bg-gray-100 dark:text-gray-400 dark:bg-gray-900/20'
+                  'text-black/70 bg-black/10 dark:text-white/70 dark:bg-white/10'
                 )}>
                   {isPositiveTrend ? (
                     <TrendingUp className="w-3 h-3 mr-1" />

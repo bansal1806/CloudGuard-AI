@@ -254,16 +254,16 @@ export function RealTimeMetrics() {
       case 'high': return 'border-orange-500 bg-orange-500/5'
       case 'medium': return 'border-yellow-500 bg-yellow-500/5'
       case 'low': return 'border-blue-500 bg-blue-500/5'
-      default: return 'border-gray-500 bg-gray-500/5'
+      default: return 'border-black/20 bg-black/5 dark:border-white/20 dark:bg-white/5'
     }
   }
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'connected': return 'text-green-500'
-      case 'disconnected': return 'text-gray-500'
+      case 'disconnected': return 'text-black/50 dark:text-white/50'
       case 'error': return 'text-red-500'
-      default: return 'text-gray-500'
+      default: return 'text-black/50 dark:text-white/50'
     }
   }
 

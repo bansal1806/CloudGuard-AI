@@ -238,7 +238,7 @@ export function SecurityGuardian() {
       case 'medium': return 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20'
       case 'high': return 'bg-orange-500/10 text-orange-600 border-orange-500/20'
       case 'critical': return 'bg-red-500/10 text-red-600 border-red-500/20'
-      default: return 'bg-slate-500/10 text-slate-600 border-slate-500/20'
+      default: return 'bg-black/10 text-black border-black/20 dark:bg-white/10 dark:text-white dark:border-white/20'
     }
   }
 
@@ -248,7 +248,7 @@ export function SecurityGuardian() {
       case 'investigating': return 'text-yellow-500 bg-yellow-500/10'
       case 'mitigated': return 'text-green-500 bg-green-500/10'
       case 'blocked': return 'text-blue-500 bg-blue-500/10'
-      default: return 'text-slate-500 bg-slate-500/10'
+      default: return 'text-black bg-black/10 dark:text-white dark:bg-white/10'
     }
   }
 
@@ -264,7 +264,7 @@ export function SecurityGuardian() {
       case 'allowed': return 'text-green-500'
       case 'blocked': return 'text-red-500'
       case 'suspicious': return 'text-orange-500'
-      default: return 'text-slate-500'
+      default: return 'text-black dark:text-white'
     }
   }
 
@@ -306,7 +306,7 @@ export function SecurityGuardian() {
               <Badge className="bg-blue-500/10 text-blue-600 border-blue-500/20">
                 Updates: {updateCount}
               </Badge>
-              <Badge className="bg-slate-500/10 text-slate-600 border-slate-500/20">
+              <Badge className="bg-black/10 text-black border-black/20 dark:bg-white/10 dark:text-white dark:border-white/20">
                 Last: {lastUpdate}
               </Badge>
               <Button 
@@ -337,11 +337,11 @@ export function SecurityGuardian() {
           <CardContent>
             <div className="space-y-4">
               {/* Security Score */}
-              <div className="text-center p-4 bg-slate-50 rounded-lg">
+              <div className="text-center p-4 bg-white rounded-lg border dark:bg-black/20">
                 <div className={`text-3xl font-bold ${getScoreColor(securityMetrics.overallScore)}`}>
                   {securityMetrics.overallScore.toFixed(1)}
                 </div>
-                <div className="text-sm text-slate-600 mb-2">Security Score</div>
+                <div className="text-sm text-black/70 mb-2 dark:text-white/70">Security Score</div>
                 <Progress value={securityMetrics.overallScore} className="w-full" />
               </div>
 
@@ -355,7 +355,7 @@ export function SecurityGuardian() {
                   <div className="text-lg font-bold text-green-600">
                     {securityMetrics.threatsBlocked.toLocaleString()}
                   </div>
-                  <div className="text-xs text-slate-600">Threats Blocked</div>
+                  <div className="text-xs text-black/70 dark:text-white/70">Threats Blocked</div>
                 </motion.div>
 
                 <motion.div
@@ -366,7 +366,7 @@ export function SecurityGuardian() {
                   <div className="text-lg font-bold text-red-600">
                     {threats.filter(t => t.status === 'detected').length}
                   </div>
-                  <div className="text-xs text-slate-600">Active Threats</div>
+                  <div className="text-xs text-black/70 dark:text-white/70">Active Threats</div>
                 </motion.div>
 
                 <motion.div
@@ -375,7 +375,7 @@ export function SecurityGuardian() {
                 >
                   <Eye className="w-5 h-5 text-blue-600 mx-auto mb-2" />
                   <div className="text-lg font-bold text-blue-600">{securityMetrics.activeScans}</div>
-                  <div className="text-xs text-slate-600">Active Scans</div>
+                  <div className="text-xs text-black/70 dark:text-white/70">Active Scans</div>
                 </motion.div>
 
                 <motion.div
@@ -386,26 +386,26 @@ export function SecurityGuardian() {
                   <div className="text-lg font-bold text-purple-600">
                     {securityMetrics.protectedAssets.toLocaleString()}
                   </div>
-                  <div className="text-xs text-slate-600">Protected Assets</div>
+                  <div className="text-xs text-black/70 dark:text-white/70">Protected Assets</div>
                 </motion.div>
               </div>
 
               {/* Additional Metrics */}
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-slate-600">Response Time:</span>
-                  <span className="font-mono">{securityMetrics.responseTime.toFixed(2)}s</span>
+                  <span className="text-black/70 dark:text-white/70">Response Time:</span>
+                  <span className="font-mono text-black dark:text-white">{securityMetrics.responseTime.toFixed(2)}s</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600">System Uptime:</span>
+                  <span className="text-black/70 dark:text-white/70">System Uptime:</span>
                   <span className="font-mono text-green-600">{securityMetrics.uptime.toFixed(1)}%</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600">Network Traffic:</span>
-                  <span className="font-mono">{securityMetrics.networkTraffic.toFixed(0)}%</span>
+                  <span className="text-black/70 dark:text-white/70">Network Traffic:</span>
+                  <span className="font-mono text-black dark:text-white">{securityMetrics.networkTraffic.toFixed(0)}%</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600">Suspicious Connections:</span>
+                  <span className="text-black/70 dark:text-white/70">Suspicious Connections:</span>
                   <span className="font-mono text-orange-600">{securityMetrics.suspiciousConnections}</span>
                 </div>
               </div>
@@ -427,7 +427,7 @@ export function SecurityGuardian() {
           <CardContent>
             <div className="space-y-3 max-h-96 overflow-y-auto">
               {threats.length === 0 ? (
-                <div className="text-center py-8 text-slate-500">
+                <div className="text-center py-8 text-black/50 dark:text-white/50">
                   <Shield className="w-12 h-12 mx-auto mb-4 opacity-50" />
                   <p>No active security threats</p>
                   <p className="text-sm">All systems secure</p>
@@ -439,25 +439,25 @@ export function SecurityGuardian() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className="p-4 rounded-lg border bg-white/50 hover:bg-white/80 transition-colors"
+                    className="p-4 rounded-lg border bg-white/50 hover:bg-white/80 transition-colors text-black"
                   >
-                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-start justify-between mb-3">
                       <div className="flex items-start space-x-3">
-                        <div className="text-slate-600">
+                        <div className="text-black">
                           {getThreatIcon(threat.type)}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="font-medium text-sm text-slate-800 mb-1">
+                          <div className="font-medium text-sm text-black mb-1">
                             {getThreatTypeLabel(threat.type)}
                           </div>
-                          <div className="text-sm text-slate-600 mb-2">
+                          <div className="text-sm text-black mb-2">
                             {threat.description}
                           </div>
                           <div className="flex flex-wrap gap-2 text-xs">
-                            <span className="text-slate-500">Source: {threat.source}</span>
-                            <span className="text-slate-500">Target: {threat.targetAsset}</span>
+                            <span className="text-black">Source: {threat.source}</span>
+                            <span className="text-black">Target: {threat.targetAsset}</span>
                             {threat.countryOrigin && threat.countryOrigin !== 'N/A' && (
-                              <span className="text-slate-500">Origin: {threat.countryOrigin}</span>
+                              <span className="text-black">Origin: {threat.countryOrigin}</span>
                             )}
                           </div>
                         </div>
@@ -474,11 +474,11 @@ export function SecurityGuardian() {
 
                     <div className="grid grid-cols-2 gap-4 text-xs mb-3">
                       <div>
-                        <span className="text-slate-500">Confidence:</span>
-                        <span className="ml-1 font-mono">{threat.confidence?.toFixed(1)}%</span>
+                        <span className="text-black">Confidence:</span>
+                        <span className="ml-1 font-mono text-black">{threat.confidence?.toFixed(1)}%</span>
                       </div>
                       <div>
-                        <span className="text-slate-500">Risk Score:</span>
+                        <span className="text-black">Risk Score:</span>
                         <span className={`ml-1 font-mono ${getRiskLevelColor(threat.riskScore)}`}>
                           {threat.riskScore?.toFixed(0)}/100
                         </span>
@@ -493,7 +493,7 @@ export function SecurityGuardian() {
                     )}
 
                     <div className="flex justify-between items-center text-xs">
-                      <span className="text-slate-500">
+                      <span className="text-black">
                         {Math.floor((Date.now() - threat.detectedAt.getTime()) / 60000)}m ago
                       </span>
                       <div className="flex space-x-1">
@@ -539,23 +539,23 @@ export function SecurityGuardian() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.02 }}
-                  className="flex items-center justify-between p-2 bg-white/50 rounded text-xs hover:bg-white/80 transition-colors"
+                  className="flex items-center justify-between p-2 bg-white/50 rounded text-xs hover:bg-white/80 transition-colors text-black"
                 >
                   <div className="flex items-center space-x-3">
                     <div className={`w-2 h-2 rounded-full ${
                       activity.status === 'allowed' ? 'bg-green-500' :
                       activity.status === 'blocked' ? 'bg-red-500' : 'bg-orange-500'
                     }`}></div>
-                    <span className="font-mono text-xs">{activity.sourceIP}</span>
-                    <span className="text-slate-500">→</span>
-                    <span className="font-mono text-xs">{activity.destinationIP}:{activity.port}</span>
+                    <span className="font-mono text-xs text-black">{activity.sourceIP}</span>
+                    <span className="text-black">→</span>
+                    <span className="font-mono text-xs text-black">{activity.destinationIP}:{activity.port}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Badge variant="outline" className="text-xs">{activity.protocol}</Badge>
                     <span className={`text-xs font-medium ${getNetworkStatusColor(activity.status)}`}>
                       {activity.status.toUpperCase()}
                     </span>
-                    <span className="text-xs text-slate-500">{activity.country}</span>
+                    <span className="text-xs text-black">{activity.country}</span>
                   </div>
                 </motion.div>
               ))}
@@ -608,15 +608,15 @@ export function SecurityGuardian() {
               </Button>
 
               {/* AI Status */}
-              <div className="mt-6 p-3 bg-slate-50 rounded-lg">
+              <div className="mt-6 p-3 bg-white rounded-lg border dark:bg-black/20">
                 <div className="flex items-center justify-between text-sm mb-2">
                   <div className="flex items-center space-x-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    <span className="font-medium">AI Guardian</span>
+                    <span className="font-medium text-black dark:text-white">AI Guardian</span>
                   </div>
                   <span className="text-green-600 font-semibold">Active</span>
                 </div>
-                <div className="text-xs text-slate-600 space-y-1">
+                <div className="text-xs text-black/70 dark:text-white/70 space-y-1">
                   <div>Monitoring {securityMetrics.protectedAssets.toLocaleString()} assets</div>
                   <div>Last scan: {securityMetrics.lastScanTime.toLocaleTimeString()}</div>
                   <div>Vulnerabilities patched: {securityMetrics.vulnerabilitiesPatched}</div>

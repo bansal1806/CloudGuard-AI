@@ -8,12 +8,11 @@ import {
   Eye, 
   Brain,
   Cloud, 
-  Server, 
-  DollarSign,
   AlertTriangle,
   BarChart3,
   Database,
-  Zap
+  Zap,
+  Target
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -22,13 +21,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 // Import all dashboard components
 import { RealTimeMetrics } from './RealTimeMetrics'
 import { PredictiveAlerts } from './PredictiveAlerts'
-import { CostOptimization } from './CostOptimization'
 import { DataSourcesOverview } from './DataSourcesOverview'
 import { RealTimeComparison } from './RealTimeComparison'
 import { SecurityGuardian } from './SecurityGuardian'
-import { IntelligentInfrastructureManager } from './IntelligentInfrastructureManager'
+import { AutoOptimizationEngine } from './AutoOptimizationEngine'
+import { LiveInfrastructureOptimizer } from './LiveInfrastructureOptimizer'
 import { CloudProviderOverview } from './CloudProviderOverview'
-import { ResourcesTable } from './ResourcesTable'
 
 export function DashboardTabs() {
   const [activeTab, setActiveTab] = useState('overview')
@@ -53,6 +51,12 @@ export function DashboardTabs() {
       description: 'Security monitoring and threats'
     },
     {
+      id: 'auto-optimizer',
+      label: 'Auto-Optimizer',
+      icon: <Target className="h-4 w-4" />,
+      description: 'ML-powered auto-optimization with instant cutoffs'
+    },
+    {
       id: 'ai-optimizer',
       label: 'AI Optimizer',
       icon: <Brain className="h-4 w-4" />,
@@ -64,18 +68,6 @@ export function DashboardTabs() {
       icon: <Cloud className="h-4 w-4" />,
       description: 'Cloud provider overview'
     },
-    {
-      id: 'resources',
-      label: 'Resources',
-      icon: <Server className="h-4 w-4" />,
-      description: 'Resource management table'
-    },
-    {
-      id: 'cost',
-      label: 'Cost Optimization',
-      icon: <DollarSign className="h-4 w-4" />,
-      description: 'Cost analysis and optimization'
-    }
   ]
 
   return (
@@ -93,7 +85,7 @@ export function DashboardTabs() {
         </CardHeader>
         <CardContent>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7 h-auto p-1 bg-muted">
+            <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 h-auto p-1 bg-muted">
               {tabs.map((tab) => (
                 <TabsTrigger
                   key={tab.id}
@@ -169,6 +161,21 @@ export function DashboardTabs() {
                 </motion.div>
               </TabsContent>
 
+              {/* Auto-Optimization Engine Tab */}
+              <TabsContent value="auto-optimizer" className="space-y-6">
+                <div className="text-center mb-4">
+                  <h2 className="text-xl font-semibold">Auto-Optimization Engine</h2>
+                  <p className="text-sm text-muted-foreground">ML-powered real-time optimization with Lambda functions and auto-cutoffs</p>
+                </div>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <AutoOptimizationEngine />
+                </motion.div>
+              </TabsContent>
+
               {/* AI Infrastructure Optimizer Tab */}
               <TabsContent value="ai-optimizer" className="space-y-6">
                 <div className="text-center mb-4">
@@ -180,7 +187,7 @@ export function DashboardTabs() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <IntelligentInfrastructureManager />
+                  <LiveInfrastructureOptimizer />
                 </motion.div>
               </TabsContent>
 
@@ -199,35 +206,7 @@ export function DashboardTabs() {
                 </motion.div>
               </TabsContent>
 
-              {/* Resources Tab */}
-              <TabsContent value="resources" className="space-y-6">
-                <div className="text-center mb-4">
-                  <h2 className="text-xl font-semibold">Resource Management</h2>
-                  <p className="text-sm text-muted-foreground">Comprehensive resource monitoring and control</p>
-                </div>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <ResourcesTable />
-                </motion.div>
-              </TabsContent>
 
-              {/* Cost Optimization Tab */}
-              <TabsContent value="cost" className="space-y-6">
-                <div className="text-center mb-4">
-                  <h2 className="text-xl font-semibold">Cost Optimization</h2>
-                  <p className="text-sm text-muted-foreground">AI-powered cost analysis and optimization recommendations</p>
-                </div>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <CostOptimization />
-                </motion.div>
-              </TabsContent>
             </div>
           </Tabs>
         </CardContent>

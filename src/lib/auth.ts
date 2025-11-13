@@ -1,7 +1,7 @@
 import { sign, verify, type SignOptions } from 'jsonwebtoken'
 import { hash, compare } from 'bcryptjs'
-// import { prisma } from './db'
-// import type { User } from '@prisma/client'
+import { prisma } from './db'
+import type { User } from '@prisma/client'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key-for-development-only'
 const JWT_EXPIRES_IN: string | number = process.env.JWT_EXPIRES_IN || '7d'

@@ -1087,7 +1087,7 @@ export function AutoOptimizationEngine() {
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
                           <div className="font-semibold">{rule.name}</div>
-                          <Switch checked={rule.enabled} onCheckedChange={() => {}} size="sm" />
+                          <Switch checked={rule.enabled} onCheckedChange={() => {}} />
                         </div>
                         <Badge className={getSeverityColor(rule.severity)}>
                           {rule.severity}

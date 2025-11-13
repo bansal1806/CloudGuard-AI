@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { AuthService } from '@/lib/auth'
 import { z } from 'zod'
 
+// Force dynamic rendering to prevent build-time database connection
+export const dynamic = 'force-dynamic'
+
 const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6)

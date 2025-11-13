@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { AuthService } from '@/lib/auth'
 
+// Force dynamic rendering to prevent build-time database connection
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   try {
     const token = request.headers.get('authorization')?.replace('Bearer ', '') ||

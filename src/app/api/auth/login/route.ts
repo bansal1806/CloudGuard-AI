@@ -4,6 +4,7 @@ import { z } from 'zod'
 
 // Force dynamic rendering to prevent build-time database connection
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -13,7 +14,7 @@ const loginSchema = z.object({
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    
+
     // Validate input
     const { email, password } = loginSchema.parse(body)
 
@@ -38,7 +39,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error: any) {
     console.error('Login error:', error)
-    
+
     return NextResponse.json({
       success: false,
       error: error.message || 'Login failed'

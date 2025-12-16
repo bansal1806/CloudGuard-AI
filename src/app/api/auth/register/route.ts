@@ -4,6 +4,7 @@ import { z } from 'zod'
 
 // Force dynamic rendering to prevent build-time database connection
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 const registerSchema = z.object({
   email: z.string().email(),
@@ -14,7 +15,7 @@ const registerSchema = z.object({
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    
+
     // Validate input
     const { email, password, name } = registerSchema.parse(body)
 
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error: any) {
     console.error('Registration error:', error)
-    
+
     return NextResponse.json({
       success: false,
       error: error.message || 'Registration failed'

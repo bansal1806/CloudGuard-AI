@@ -14,9 +14,6 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV === 'production',
   },
 
-  // Output configuration for Docker
-  output: process.env.BUILD_STANDALONE === 'true' ? 'standalone' : undefined,
-
   // Image optimization
   images: {
     domains: ['localhost'],

@@ -1,9 +1,9 @@
-import type { jest } from '@jest/globals'
+import { jest } from '@jest/globals'
 import { aiService } from '@/services/aiService'
 import type { PredictionRequest, AnomalyDetectionRequest, CostOptimizationRequest } from '@/services/aiService'
 
 // Mock fetch
-global.fetch = jest.fn()
+global.fetch = jest.fn() as any
 
 const mockFetch = fetch as jest.MockedFunction<typeof fetch>
 

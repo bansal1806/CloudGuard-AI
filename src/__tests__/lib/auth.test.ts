@@ -1,28 +1,33 @@
-import type { jest } from '@jest/globals'
+import { jest } from '@jest/globals'
 import { AuthService } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 
-// Mock Prisma
+// Mock bcryptjs first
+const mockBcrypt = {
+  hash: jest.fn(),
+  compare: jest.fn(),
+}
+
+jest.mock('bcryptjs', () => mockBcrypt)
+
+// Mock Prisma with proper types
+const mockPrismaUser = {
+  findUnique: jest.fn() as jest.MockedFunction<any>,
+  create: jest.fn() as jest.MockedFunction<any>,
+}
+
 jest.mock('@/lib/db', () => ({
   prisma: {
-    user: {
-      findUnique: jest.fn(),
-      create: jest.fn(),
-    },
+    user: mockPrismaUser,
   },
 }))
-
-// Mock bcryptjs
-jest.mock('bcryptjs', () => ({
-  hash: jest.fn().mockResolvedValue('hashed-password'),
-  compare: jest.fn().mockResolvedValue(true),
-}))
-
-const mockPrisma = prisma as jest.Mocked<typeof prisma>
 
 describe('AuthService', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    // Setup default mock return values
+    mockBcrypt.hash.mockResolvedValue('hashed-password' as never)
+    mockBcrypt.compare.mockResolvedValue(true as never)
   })
 
   describe('register', () => {
@@ -37,8 +42,8 @@ describe('AuthService', () => {
         updatedAt: new Date(),
       }
 
-      (mockPrisma.user.findUnique as jest.Mock).mockResolvedValue(null)
-      (mockPrisma.user.create as jest.Mock).mockResolvedValue(mockUser)
+      mockPrismaUser.findUnique.mockResolvedValue(null)
+      mockPrismaUser.create.mockResolvedValue(mockUser)
 
       const result = await AuthService.register({
         email: 'test@example.com',
@@ -62,7 +67,7 @@ describe('AuthService', () => {
         updatedAt: new Date(),
       }
 
-      (mockPrisma.user.findUnique as jest.Mock).mockResolvedValue(existingUser)
+      mockPrismaUser.findUnique.mockResolvedValue(existingUser)
 
       await expect(
         AuthService.register({
@@ -85,7 +90,7 @@ describe('AuthService', () => {
         updatedAt: new Date(),
       }
 
-      (mockPrisma.user.findUnique as jest.Mock).mockResolvedValue(mockUser)
+      mockPrismaUser.findUnique.mockResolvedValue(mockUser)
 
       const result = await AuthService.login({
         email: 'test@example.com',
@@ -97,7 +102,7 @@ describe('AuthService', () => {
     })
 
     it('should throw error for invalid credentials', async () => {
-      (mockPrisma.user.findUnique as jest.Mock).mockResolvedValue(null)
+      mockPrismaUser.findUnique.mockResolvedValue(null)
 
       await expect(
         AuthService.login({

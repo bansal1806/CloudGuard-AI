@@ -95,7 +95,7 @@ const nextConfig = {
 
   // TypeScript configuration
   typescript: {
-    ignoreBuildErrors: true,
+
     // Skip type checking during build (handled by CI/CD)
     ignoreBuildErrors: process.env.SKIP_TYPE_CHECK === 'true',
   },
